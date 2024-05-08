@@ -109,4 +109,22 @@ namespace boost
             }
         }
     }
+
+    /* int num_edges(Graph g){
+        Iter_Edge iti, itf;
+        boost::tie(iti,itf) = boost::edges(g);
+        return std::distance(itf,iti);
+    }
+ */
+    template<typename Graph,typename Edge_it>
+    void remove_random_edge(Graph& g, int N, int SIZE){
+        for (int i = 0; i < N; i++)
+        {
+            Iter_Edge iti = boost::edges(g).first;
+            int rnd = std::rand() % (boost::num_edges(g));
+std::cerr << " n.edge: " << num_edges(g) << "j";
+            std::advance(iti, rnd);
+            boost::remove_edge(*iti,g);
+        }
+    }
 }

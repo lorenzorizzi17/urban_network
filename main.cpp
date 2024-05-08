@@ -56,15 +56,17 @@ int main() {
         input_file >> x >> y;
         std::pair<Edge, bool> result = boost::add_edge(x, y, g);
     }
-    boost::add_diagonal_roads<Graph,int>(g,3,std::sqrt(N));
+    boost::add_diagonal_roads<Graph,int>(g,10,std::sqrt(N));
+    boost::remove_random_edge<Graph,Iter_Edge>(g,5,std::sqrt(N));
     std::ofstream file("fig/graph.dot");
     boost::write_graphviz(file, g);
     file.close();
-    system("dot -Tpng fig/graph.dot -o fig/graph.png");
+    system("neato -Tpng fig/graph.dot -o fig/graph.png");
+
     Graph dual = boost::make_dual_graph(g);
     std::ofstream file_dual("fig/graph_dual.dot");
     boost::write_graphviz(file_dual, dual);
     file_dual.close();
-    system("dot -Tpng fig/graph_dual.dot -o fig/graph_dual.png");
+    system("fdp -Tpng fig/graph_dual.dot -o fig/graph_dual.png");
 
 }
