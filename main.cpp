@@ -44,8 +44,10 @@ namespace std {
 }
 
 int main() {
-    int N = 16;
-    create_data(std::sqrt(N));
+    //N is the dimension of the urban network (number of crosspoints)
+    srand (time(NULL));
+    const int N = 144;
+    boost::create_manhattan_data(std::sqrt(N));
     Graph g(N);
     std::ifstream input_file("data/manhattan_grid.dat");
     Edge e;
@@ -54,12 +56,12 @@ int main() {
         input_file >> x >> y;
         std::pair<Edge, bool> result = boost::add_edge(x, y, g);
     }
-    
+    boost::add_diagonal_roads<Graph,int>(g,3,std::sqrt(N));
     std::ofstream file("fig/graph.dot");
     boost::write_graphviz(file, g);
     file.close();
     system("dot -Tpng fig/graph.dot -o fig/graph.png");
-    Graph dual = make_dual_graph(g);
+    Graph dual = boost::make_dual_graph(g);
     std::ofstream file_dual("fig/graph_dual.dot");
     boost::write_graphviz(file_dual, dual);
     file_dual.close();
