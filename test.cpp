@@ -55,4 +55,7 @@ int main(){
         std::cout << std::endl;
     } */
 
+
+    //if you have asked for an adjacency list with no parallel edges, the method boost::add:edge won't add a new edge
+
 }
