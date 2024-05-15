@@ -61,20 +61,20 @@ int main() {
     system("fdp -Tpng fig/graph_dual.dot -o fig/graph_dual.png");
 
     //running OD simulation
-    const int N_AGENTS = 100;
+    const int N_AGENTS = 10;
+    const double MIN_D = 24;
 
     //declaring and defining agents
     std::vector<Agent> agents;
     for (int n = 0; n < N_AGENTS;n++)
     {
-        Agent a = Agent(g);
+        Agent a = Agent(g,MIN_D);
         agents.push_back(a);
-        std::cout << "Agents n. " << n << " born in " << a.get_vertex() << ", dest in " << a.get_destination() << std::endl; 
     }
     std::cout << std::endl;
 
     int time = 0;
-    int TIME_MAX = 100;
+    int TIME_MAX = 40;
     //run
     while (time < TIME_MAX)
     {
@@ -88,10 +88,9 @@ int main() {
         for (int i = size-1; i >= 0; i--)
         {
             if(agents[i].arrived()){
-                std::cout << "Agent n. " << agents[i].get_id() << " has arrived\n";
+                std::cout << "Agent n. " << agents[i].get_id() << " has arrived. ";
                 agents.erase(agents.begin()+i);
-                Agent a = Agent(g);
-                agents.push_back(a);
+                Agent a = Agent(g,MIN_D); agents.push_back(a);
             }
         }
         time++;

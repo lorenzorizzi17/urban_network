@@ -20,22 +20,31 @@ class Agent {
         m_dest_vertex = id_map[id_f];
     }
     //random spawning
-    Agent(Graph const& g){
-        //take a random vertex
-        Iter_Vertex iti = boost::vertices(g).first;
-        int rnd = std::rand() % (boost::num_vertices(g));
-        std::advance(iti, rnd);
-        m_curr_vertex = *iti;
-        iti = boost::vertices(g).first;
-        rnd = std::rand() % (boost::num_vertices(g));
-        std::advance(iti, rnd);
-        m_dest_vertex = *iti;
-        //now builds the shortest dijkstra path
+    Agent(Graph const& g, double MIN_DIST){
         m_internal_time = 0;
         m_id = m_instances;
-        m_path = boost::get_dijkstra_shortest_path(m_curr_vertex,m_dest_vertex,g);
         m_instances++;
+        //randomly chose first vertex
+        Iter_Vertex iti = boost::vertices(g).first;
+        std::advance(iti, std::rand() % (boost::num_vertices(g)));
+        m_curr_vertex = *iti;
+        //randomly chose destination vertex
+        iti = boost::vertices(g).first;
+        std::advance(iti, std::rand() % (boost::num_vertices(g)));
+        double d = boost::get_dijkstra_shortest_path(m_curr_vertex,*iti,g).second;
+        while(d < MIN_DIST){
+            iti = boost::vertices(g).first;
+            std::advance(iti, std::rand() % (boost::num_vertices(g)));
+            d = boost::get_dijkstra_shortest_path(m_curr_vertex,*iti,g).second;
+        }
+        m_dest_vertex = *iti;
+        m_path = boost::get_dijkstra_shortest_path(m_curr_vertex,m_dest_vertex,g).first;
+
+        //prints some info
+        std::cout << "Agents n. " << this->get_id() << " born in " << this->get_vertex() << ", dest in " << this->get_destination() << " (d = " << this->get_distance_left(g) << ")" << std::endl; 
+        
     }
+    
 
     Vertex get_vertex() const {
         return m_curr_vertex;
@@ -66,6 +75,10 @@ class Agent {
 
     int get_id()const{  
         return m_id;
+    }
+
+    double get_distance_left(Graph const& g){
+        return boost::get_dijkstra_shortest_path(m_curr_vertex,m_dest_vertex,g).second;
     }
 
 };

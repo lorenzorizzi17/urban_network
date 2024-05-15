@@ -26,7 +26,7 @@ namespace boost
 {
 
     // compute the dijkstra shortest path between two vertices in the graph. Returns a vector containing the ordered sequence of vertices to get from A to B
-    std::vector<Vertex> get_dijkstra_shortest_path(Vertex const &vi, Vertex const &vf, Graph const &g)
+    std::pair<std::vector<Vertex>,double> get_dijkstra_shortest_path(Vertex const &vi, Vertex const &vf, Graph const &g)
     {
         boost::property_map<Graph, boost::vertex_index_t>::type map_indices = boost::get(boost::vertex_index, g);
         // This is to store the predecessor
@@ -48,7 +48,7 @@ namespace boost
             res.push_back(pred);
         }
         std::reverse(res.begin(), res.end());
-        return res;
+        return std::make_pair(res,d[vf]);
     }
 }
 
