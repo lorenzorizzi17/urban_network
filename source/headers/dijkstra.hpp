@@ -1,3 +1,7 @@
+#ifndef DIJKSTRA
+#define DIJKSTRA
+
+
 #include </home/lorenzo17/boost/boost/graph/dijkstra_shortest_paths.hpp>
 #include "./alias.hpp"
 
@@ -43,6 +47,9 @@ namespace boost
             pred = p[map_indices[pred]];
             res.push_back(pred);
         }
+        std::reverse(res.begin(), res.end());
         return res;
     }
 }
+
+#endif
