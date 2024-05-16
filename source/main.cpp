@@ -66,7 +66,7 @@ int main() {
 
     //declaring and defining agents
     std::vector<Agent> agents;
-    for (int n = 0; n < N_AGENTS;n++)
+    for (int n = 0; n < N_AGENTS; n++)
     {
         Agent a = Agent(g,MIN_D);
         agents.push_back(a);

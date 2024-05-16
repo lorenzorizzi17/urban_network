@@ -10,29 +10,38 @@ namespace boost{
         // first, select a random vertices in the interior of the graph
         for (int k = 0; k < N; k++)
         {
+            //selecting a random vertex based on cartesian coordinates (i,j)
             int i, j = 0;
-            while ((i == 0) || (j == 0) || (i == SIZE - 1) || (j == SIZE - 1) || (boost::are_connected(i, j, g)))
+            while (((i == 0) || (j == 0) || (i == SIZE - 1) || (j == SIZE - 1)))
             {
                 i = std::rand() % (SIZE);
                 j = std::rand() % (SIZE);
             }
             int which_diag = std::rand() % 4;
-            switch (which_diag)
-            {
-            case 0:
-                boost::add_edge(i * SIZE + j, (i - 1) * SIZE + j - 1, g);
-                break;
-            case 1:
-                boost::add_edge(i * SIZE + j, (i - 1) * SIZE + j + 1, g);
-                break;
-            case 2:
-                boost::add_edge(i * SIZE + j, (i + 1) * SIZE + j - 1, g);
-                break;
-            case 3:
-                boost::add_edge(i * SIZE + j, (i + 1) * SIZE + j + 1, g);
-                break;
-            default:
-                break;
+            for(int l = 0;l<4;l++){
+                switch (which_diag){
+                    case 0:
+                        if(!boost::are_connected(i * SIZE + j, (i - 1) * SIZE + j - 1, g)){
+                            boost::add_edge(i * SIZE + j, (i - 1) * SIZE + j - 1, g); l =5;
+                            break;
+                        };
+                    case 1:
+                        if(!boost::are_connected(i * SIZE + j, (i - 1) * SIZE + j + 1, g)){
+                            boost::add_edge(i * SIZE + j, (i - 1) * SIZE + j + 1, g); l = 5;
+                            break;
+                        };
+                    case 2:
+                        if(!boost::are_connected(i * SIZE + j, (i + 1) * SIZE + j - 1, g)){
+                            boost::add_edge(i * SIZE + j, (i + 1) * SIZE + j - 1, g); l = 5;
+                            break;
+                        };
+                    case 3:
+                        if(!boost::are_connected(i * SIZE + j, (i + 1) * SIZE + j + 1, g)){
+                            boost::add_edge(i * SIZE + j, (i + 1) * SIZE + j + 1, g); l = 5;
+                            break;
+                        };
+                    }
+                which_diag = std::rand() % 4;
             }
         }
     }

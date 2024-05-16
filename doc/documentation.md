@@ -8,12 +8,19 @@ Una breve ed esaustica documentazione di quanto realizzato
 
 
 
+Per rendere più realistico il grafo rappresentante il network urbano, sono state implementate due funzioni definite in _headers/randomize.hpp_: _boost::add\_diagonal\_roads(Graph const& g, int N, int SIZE)_ e _boost::remove\_random\_edge(Graph const& g, int N, inst SIZE)_.
+- La prima funzione aggiunge randomicamenten $N$ strade diagonali pescando uniformemente un nodo nel grafo e una delle 4 possibili direzioni della strada diagonale che da quel nodo diparte. Un meccanismo interno di protezione impedisce che vengano aggiunti doppi edges (_safety over quantity_: piuttosto non si aggiunge una strada)
+- La seconda funzione rimuove casualmente $N$ degli edges nel grafo
+
+
+
 ## Dijkstra algorithm
 
 Due diverse dinamiche per il modello OD:
 - Solo alcuni nodi vengono scelti come origine e solo alcuni vengono selezionati come destinazione
 - Ogni nodo ha la stessa probabilità di essere scelto come origine o destinazione 
 
+Optiamo per la seconda
 Per modellare la dinamica di agenti microscopici con modello OD sul grafo urbano, ho creato una class user-defined _Agent_. Tale classe ha come membri privati: 
  1) Due oggetti _boost::VertexDescriptor_, rispettivamente la posizione corrente sul grafo e la destinazione
  2) un _m\_internal\_time_, tempo interno della dinamica dell'agente
