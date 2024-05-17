@@ -28,7 +28,7 @@ namespace std{
 int main() {
     srand(time(NULL));
     //N is the dimension of the urban network (number of crosspoints)
-    const int N = 144;
+    const int N = 100;
     //creating manhattan data
     boost::create_manhattan_data(std::sqrt(N));
 
@@ -49,7 +49,10 @@ int main() {
     //boost::print_weight_map<Graph, Iter_Edge>(g);
     
     //creating dual graph
-    Graph dual = boost::make_dual_graph(g);
+    std::map<Vertex, Edge> dual_map;
+    Graph dual = boost::make_dual_graph(g,dual_map);
+
+std::cerr << boost::source(dual_map[*boost::vertices(dual).first],g) << " " << boost::target(dual_map[*boost::vertices(dual).first],g);
 
     //store both graphs in a .dot extension, ready to be rendered
     std::ofstream file("fig/graph.dot");
@@ -62,7 +65,7 @@ int main() {
     system("fdp -Tpng fig/graph_dual.dot -o fig/graph_dual.png");
 
     //running OD simulation
-    const int N_AGENTS = 12;
+    const int N_AGENTS = 100;
     const double MIN_D = 30;
 
     //declaring and defining agents
@@ -75,16 +78,18 @@ int main() {
     std::cout << std::endl;
 
     int time = 0;
-    int TIME_MAX = 40;
-    //run
-
+    int TIME_MAX = 400;
     unsigned const display_height = 0.95 * sf::VideoMode::getDesktopMode().height; //=768
     int const fps = 60;
-    sf::RenderWindow window(sf::VideoMode(display_height, display_height),
-                              "Roundabout", sf::Style::Default);
+
+    //SFML rendering stuff
+    sf::RenderWindow window(sf::VideoMode(display_height, display_height),"Roundabout", sf::Style::Default);
     window.setFramerateLimit(fps);
 
-    while (window.isOpen()){
+    //graphics loop
+    while (window.isOpen() && time < TIME_MAX){
+
+        //event handler
         sf::Event event;
         while (window.pollEvent(event)) {
           if (event.type == sf::Event::Closed) {
@@ -93,12 +98,15 @@ int main() {
         }
         window.clear(sf::Color::White);
 
+       
+        boost::render_graph(window,g,std::sqrt(N), agents,false);
 
-        //update agents position based on dijkstra shortest path
+        //for every delta t, update agents position based on dijkstra shortest path
+        std::for_each(agents.begin(),agents.end(),[&](Agent& a){a.evolve_dijsktra(g);});
         for(auto it = agents.begin(); it != agents.end() ;it++){
-            it->evolve_dijsktra();
             std::cerr << "Current agent position n. " << it->get_id() << " on the grid: " << it->get_vertex() << " at time  t= " << time << std::endl;     
         }
+
         //remove agents who arrived at their destination
         int size = agents.size();
         for (int i = size-1; i >= 0; i--)
@@ -109,10 +117,10 @@ int main() {
                 Agent a = Agent(g,MIN_D); agents.push_back(a);
             }
         }
-        boost::render_graph(window,g,std::sqrt(N), agents);
+        
         time++;
         std::cout << std::endl;
-        sleep(0.1);
         window.display();
+        sleep(0.1);
     }       
 }

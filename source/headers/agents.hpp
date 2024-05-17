@@ -11,6 +11,7 @@ class Agent {
     private:
     Vertex m_curr_vertex;
     Vertex m_dest_vertex;
+    Edge m_curr_edge; 
     std::vector<Vertex> m_path;
     int m_internal_time = 0;
     
@@ -59,6 +60,10 @@ class Agent {
         return m_dest_vertex;
     }
 
+    Edge get_edge() const {
+        return m_curr_edge;
+    }
+
     void set_vertex(Vertex const& v){
         m_curr_vertex = v;
     }
@@ -67,11 +72,13 @@ class Agent {
         return m_path;
     }
 
-    void evolve_dijsktra(){
+    void evolve_dijsktra(Graph const& g){
+        Vertex old_vertex = m_curr_vertex;
         if(m_curr_vertex != m_dest_vertex){
             m_curr_vertex = m_path[m_internal_time];
         }
         m_internal_time++;
+        m_curr_edge = boost::edge(old_vertex, m_curr_vertex, g).first;
     }
 
     bool arrived() const{
