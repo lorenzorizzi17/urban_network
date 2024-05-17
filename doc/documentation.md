@@ -28,6 +28,11 @@ Per modellare la dinamica di agenti microscopici con modello OD sul grafo urbano
 
  A questo punto, nel _main.cpp_ viene creato un vettore di tali _Agent_ richiamando il costruttore parametrico randomico e ogni elemento viene fatto evolvere verso la propria destinazione. Quando un agente raggiunge la sua destinazione, viene eliminato dal vettore e il distruttore subentra. Appena ciò accade, un nuovo agente viene istanziato e spawna nel grafo, pronto a seguire la sua strada. __Al momento, la simulazione è settata perché il numero di macchine sul grafo rimanga costante (appena muore, subito nasce)__. Alternative? Ogni tot tempo, ne nasce una
 
+ ## Render grafico
+ Il grafo urbano creato tramite istanze di boost è visualizzabile in due modalità:
+ - Attraverso il motore di rendering esterno _graphviz_. In _main.cpp_, dopo la chiamate a _boost::create\_manhattan\_data_ e alle funzioni di randomizzazione, il grafo risultante viene salvato in formato .dot in un fike testuale esterno sito in _/data_, col nome _graph.dot_. Attraverso una system call, viene lanciato _graphviz_ che analizza il grafo in tale formato e ne realizza un render grafico salvato in immagine in _graph.png_
+ - Attraverso una funzione implementata da me _boost::render\_graph(Graph const& g, sf::RenderWindow const& w, int SIZE, std::vector\<Agent\> const& agents)_ che si appoggia sulla libreria OpenGL SFML. Ad ogni iterazione della simulazione, la chiamata alla funzione _boost::render\_graph(g,w,n,size)_ si preoccupa di disegnare sulla finestra SFML le strade e gli incroci seguendo uno schema più geometrico rispetto al caso precedente, in cui la renderizzazione è interamente affidata a motori di rendering terzi. 
+
 
 
 
