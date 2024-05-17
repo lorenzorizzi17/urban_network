@@ -1,4 +1,9 @@
 //this file will implement the agent perspective in a OD model
+
+#ifndef AGENTS
+#define AGENTS
+
+
 #include"./alias.hpp"
 #include"./dijkstra.hpp"
 
@@ -82,3 +87,5 @@ class Agent {
     }
 
 };
+
+#endif

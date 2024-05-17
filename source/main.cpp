@@ -7,6 +7,7 @@
 #include"./headers/dijkstra.hpp"
 #include"./headers/agents.hpp"
 #include"./headers/randomize.hpp"
+#include"./headers/renderer.hpp"
 
 int Agent::m_instances = 0;
 
@@ -27,7 +28,7 @@ namespace std{
 int main() {
     srand(time(NULL));
     //N is the dimension of the urban network (number of crosspoints)
-    const int N = 81;
+    const int N = 144;
     //creating manhattan data
     boost::create_manhattan_data(std::sqrt(N));
 
@@ -61,8 +62,8 @@ int main() {
     system("fdp -Tpng fig/graph_dual.dot -o fig/graph_dual.png");
 
     //running OD simulation
-    const int N_AGENTS = 10;
-    const double MIN_D = 24;
+    const int N_AGENTS = 12;
+    const double MIN_D = 30;
 
     //declaring and defining agents
     std::vector<Agent> agents;
@@ -76,8 +77,23 @@ int main() {
     int time = 0;
     int TIME_MAX = 40;
     //run
-    while (time < TIME_MAX)
-    {
+
+    unsigned const display_height = 0.95 * sf::VideoMode::getDesktopMode().height; //=768
+    int const fps = 60;
+    sf::RenderWindow window(sf::VideoMode(display_height, display_height),
+                              "Roundabout", sf::Style::Default);
+    window.setFramerateLimit(fps);
+
+    while (window.isOpen()){
+        sf::Event event;
+        while (window.pollEvent(event)) {
+          if (event.type == sf::Event::Closed) {
+            window.close();
+          }
+        }
+        window.clear(sf::Color::White);
+
+
         //update agents position based on dijkstra shortest path
         for(auto it = agents.begin(); it != agents.end() ;it++){
             it->evolve_dijsktra();
@@ -93,7 +109,10 @@ int main() {
                 Agent a = Agent(g,MIN_D); agents.push_back(a);
             }
         }
+        boost::render_graph(window,g,std::sqrt(N), agents);
         time++;
         std::cout << std::endl;
-    }
+        sleep(0.1);
+        window.display();
+    }       
 }
