@@ -32,7 +32,7 @@ int main() {
     //creating manhattan data
     boost::create_manhattan_data(std::sqrt(N));
 
-    //storing the grapg based on previous operation on .txt file
+    //storing the graph based on previous operation on .txt file
     Graph g(N);
     std::ifstream input_file("data/manhattan_grid.dat");
     while(input_file.good()){
@@ -51,8 +51,6 @@ int main() {
     //creating dual graph
     std::map<Vertex, Edge> dual_map;
     Graph dual = boost::make_dual_graph(g,dual_map);
-
-std::cerr << boost::source(dual_map[*boost::vertices(dual).first],g) << " " << boost::target(dual_map[*boost::vertices(dual).first],g);
 
     //store both graphs in a .dot extension, ready to be rendered
     std::ofstream file("fig/graph.dot");
@@ -79,13 +77,14 @@ std::cerr << boost::source(dual_map[*boost::vertices(dual).first],g) << " " << b
 
     int time = 0;
     int TIME_MAX = 400;
-    unsigned const display_height = 0.95 * sf::VideoMode::getDesktopMode().height; //=768
+    unsigned const display_height = 0.8* sf::VideoMode::getDesktopMode().height; //=768
     int const fps = 60;
 
     //SFML rendering stuff
     sf::RenderWindow window(sf::VideoMode(display_height, display_height),"Roundabout", sf::Style::Default);
     window.setFramerateLimit(fps);
 
+std::cout << "\n STARTING SIMULATION...\n";
     //graphics loop
     while (window.isOpen() && time < TIME_MAX){
 
@@ -98,14 +97,14 @@ std::cerr << boost::source(dual_map[*boost::vertices(dual).first],g) << " " << b
         }
         window.clear(sf::Color::White);
 
-       
-        boost::render_graph(window,g,std::sqrt(N), agents,false);
 
-        //for every delta t, update agents position based on dijkstra shortest path
-        std::for_each(agents.begin(),agents.end(),[&](Agent& a){a.evolve_dijsktra(g);});
+        //draw theme
+        boost::render_graph(window,g,std::sqrt(N), agents,false);
+        //print info about current agent state
         for(auto it = agents.begin(); it != agents.end() ;it++){
-            std::cerr << "Current agent position n. " << it->get_id() << " on the grid: " << it->get_vertex() << " at time  t= " << time << std::endl;     
+            std::cerr << "Current agent position n. " << it->get_id() << " on the grid: " << it->get_edge() << " at time  t= " << time << std::endl;     
         }
+
 
         //remove agents who arrived at their destination
         int size = agents.size();
@@ -117,10 +116,26 @@ std::cerr << boost::source(dual_map[*boost::vertices(dual).first],g) << " " << b
                 Agent a = Agent(g,MIN_D); agents.push_back(a);
             }
         }
+        boost::render_graph(window,g,std::sqrt(N), agents,false);
+        
+       
+        
+
+        //for every delta t, update agents position based on dijkstra shortest path
+        std::for_each(agents.begin(),agents.end(),[&](Agent& a){a.evolve_dijsktra(g);});
+        boost::render_graph(window,g,std::sqrt(N), agents,false);
+
+        
+        
+        //parsing p_ij
+        
+
+        
         
         time++;
         std::cout << std::endl;
         window.display();
-        sleep(0.1);
+        sf::sleep(sf::milliseconds(10));
+        
     }       
 }

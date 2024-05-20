@@ -13,21 +13,15 @@ class Agent {
     Vertex m_dest_vertex;
     Edge m_curr_edge; 
     std::vector<Vertex> m_path;
-    int m_internal_time = 0;
+    int m_internal_time = 1;
     
     int m_id = 0;
 
     public:
     static int m_instances;
-    Agent(Vertex const& vin, Vertex const& vfi, Graph const& g) : m_curr_vertex{vin}, m_dest_vertex{vfi} {};
-    Agent(int id_v, int id_f, Graph const& g){
-        IdMap id_map = boost::get(boost::vertex_index, g);
-        m_curr_vertex = id_map[id_v];
-        m_dest_vertex = id_map[id_f];
-    }
     //random spawning
     Agent(Graph const& g, double MIN_DIST){
-        m_internal_time = 0;
+        m_internal_time = 1;
         m_id = m_instances;
         m_instances++;
         //randomly chose first vertex
@@ -45,9 +39,10 @@ class Agent {
         }
         m_dest_vertex = *iti;
         m_path = boost::get_dijkstra_shortest_path(m_curr_vertex,m_dest_vertex,g).first;
+        m_curr_edge = boost::edge(m_curr_vertex, m_path[1],g).first;
 
         //prints some info
-        std::cout << "Agents n. " << this->get_id() << " born in " << this->get_vertex() << ", dest in " << this->get_destination() << " (d = " << this->get_distance_left(g) << ")" << std::endl; 
+        std::cout << "Agents n. " << this->get_id() << " born in node: " << this->get_vertex() << ", edge :" << m_curr_edge << ", dest in " << this->get_destination() << " (d = " << this->get_distance_left(g) << ")" << std::endl; 
         
     }
     
@@ -74,15 +69,13 @@ class Agent {
 
     void evolve_dijsktra(Graph const& g){
         Vertex old_vertex = m_curr_vertex;
-        if(m_curr_vertex != m_dest_vertex){
-            m_curr_vertex = m_path[m_internal_time];
-        }
+        m_curr_vertex = m_path[m_internal_time];
         m_internal_time++;
-        m_curr_edge = boost::edge(old_vertex, m_curr_vertex, g).first;
+        m_curr_edge = boost::edge(m_curr_vertex, m_path[m_internal_time], g).first;
     }
 
     bool arrived() const{
-        return m_curr_vertex == m_dest_vertex;
+        return m_path[m_internal_time+1] == m_dest_vertex;
     }
 
     int get_id()const{  

@@ -1,23 +1,24 @@
 # Documentation 
 
-Una breve ed esaustica documentazione di quanto realizzato
+Una breve ed esaustiva documentazione di quanto realizzato
 
 
 ## Graph creation
 
+La libreria boost permette di creare un oggetto di tipo grafo direttamente da un file testuale in cui siano presenti, seguendo un certo formato, le coppie di vertici legate da un edge. In _headers/, il file di intestazione _create\_data.hpp_ si occupa esattamente ciò: scrive in un file testuale esterno (_headers/data/manhattan\_grid.dat_) le combinazioni di vertici collegati in una griglia quadrata stile manhattan. A questo punto, nel _main.cpp_, viene istanziato un oggetto _boost::Graph_ (alias per ...), grafo bidirezionale planare, e ne viene formattata la struttura in base al file di testo _headers/data/manhattan\_grid.dat_. Il grafo regolare quadrato è pronto
+
 Per rendere più realistico il grafo rappresentante il network urbano, sono state implementate due funzioni definite in _headers/randomize.hpp_: _boost::add\_diagonal\_roads(Graph const& g, int N, int SIZE)_ e _boost::remove\_random\_edge(Graph const& g, int N, inst SIZE)_.
-- La prima funzione aggiunge randomicamenten $N$ strade diagonali pescando uniformemente un nodo nel grafo e una delle 4 possibili direzioni della strada diagonale che da quel nodo diparte. Un meccanismo interno di protezione impedisce che vengano aggiunti doppi edges (_safety over quantity_: piuttosto non si aggiunge una strada)
+- La prima funzione aggiunge randomicamenten $N$ strade diagonali pescando uniformemente un nodo nel grafo e una delle 4 possibili direzioni della strada diagonale che da quel nodo diparte. Un meccanismo interno di protezione impedisce che vengano aggiunti doppi edges (_safety over quantity_: piuttosto non si aggiunge una strada). Manca ancora un meccanismo che impedisca la creazione di strade che rendano non planare il grafo
 - La seconda funzione rimuove casualmente $N$ degli edges nel grafo
 
 
 
-## Dijkstra algorithm
+## Dijkstra algorithm e modello microscopico OD
 
-Due diverse dinamiche per il modello OD:
+Partiamo ora con la simulazione della dinamica microscopica/modello OD. Due diverse dinamiche per tale modello:
 - Solo alcuni nodi vengono scelti come origine e solo alcuni vengono selezionati come destinazione
 - Ogni nodo ha la stessa probabilità di essere scelto come origine o destinazione 
-
-Optiamo per la seconda
+Optiamo per la seconda.
 Per modellare la dinamica di agenti microscopici con modello OD sul grafo urbano, ho creato una class user-defined _Agent_. Tale classe ha come membri privati: 
  1) Due oggetti _boost::VertexDescriptor_, rispettivamente la posizione corrente sul grafo e la destinazione
  2) un _m\_internal\_time_, tempo interno della dinamica dell'agente
