@@ -5,13 +5,15 @@
 
 
 #include"./alias.hpp"
+#include"./randomize.hpp"
 #include"./dijkstra.hpp"
 
 class Agent {
     private:
+    Edge m_curr_edge;
+    Edge m_dest_edge;
     Vertex m_curr_vertex;
     Vertex m_dest_vertex;
-    Edge m_curr_edge; 
     std::vector<Vertex> m_path;
     int m_internal_time = 1;
     
@@ -19,48 +21,49 @@ class Agent {
 
     public:
     static int m_instances;
-    //random spawning
+
     Agent(Graph const& g, double MIN_DIST){
         m_internal_time = 1;
         m_id = m_instances;
         m_instances++;
         //randomly chose first vertex
-        Iter_Vertex iti = boost::vertices(g).first;
-        std::advance(iti, std::rand() % (boost::num_vertices(g)));
-        m_curr_vertex = *iti;
-        //randomly chose destination vertex
-        iti = boost::vertices(g).first;
-        std::advance(iti, std::rand() % (boost::num_vertices(g)));
-        double d = boost::get_dijkstra_shortest_path(m_curr_vertex,*iti,g).second;
-        while(d < MIN_DIST){
-            iti = boost::vertices(g).first;
-            std::advance(iti, std::rand() % (boost::num_vertices(g)));
-            d = boost::get_dijkstra_shortest_path(m_curr_vertex,*iti,g).second;
-        }
-        m_dest_vertex = *iti;
-        m_path = boost::get_dijkstra_shortest_path(m_curr_vertex,m_dest_vertex,g).first;
-        m_curr_edge = boost::edge(m_curr_vertex, m_path[1],g).first;
+        Vertex vi = *boost::get_random_vertex(g);
+        m_curr_vertex = vi;
+        //randomly chose destination vertex and compute dijkstra shortest path
+        double distance = 0;
+        std::tie(m_dest_vertex,m_path,distance) = boost::get_vertex_based_on_dijkstra_shortest_path(m_curr_vertex,g,MIN_DIST);
 
+        //initialize edges
+if (boost::edge(m_path[0],m_path[1],g).second){
+        m_curr_edge = boost::edge(m_path[0],m_path[1],g).first;
+}
+if (boost::edge(m_path[m_path.size()-1],m_path[m_path.size()-2],g).second){
+        m_dest_edge = boost::edge(m_path[m_path.size()-1],m_path[m_path.size()-2],g).first;
+}
         //prints some info
-        std::cout << "Agents n. " << this->get_id() << " born in node: " << this->get_vertex() << ", edge :" << m_curr_edge << ", dest in " << this->get_destination() << " (d = " << this->get_distance_left(g) << ")" << std::endl; 
+        std::cout << "Agents n. " << this->get_id() << " born in node: " << this->get_vertex() << ", dest in " << this->get_vertex_destination() << "; from " << m_curr_edge << " to " << m_dest_edge << " (d = " << distance << ")" << std::endl; 
         
     }
     
-
     Vertex get_vertex() const {
         return m_curr_vertex;
     }
 
-    Vertex get_destination() const {
-        return m_dest_vertex;
-    }
-
-    Edge get_edge() const {
+    Edge get_road() const {
         return m_curr_edge;
     }
 
-    void set_vertex(Vertex const& v){
-        m_curr_vertex = v;
+    Vertex get_vertex_destination() const {
+        return m_dest_vertex;
+    }
+
+    Edge get_road_destination() const {
+        return m_dest_edge;
+    }
+
+
+    void set_edge(Edge const& e){
+        m_curr_edge = e;
     }
 
     std::vector<Vertex> get_route() const{
@@ -68,23 +71,24 @@ class Agent {
     }
 
     void evolve_dijsktra(Graph const& g){
-        Vertex old_vertex = m_curr_vertex;
         m_curr_vertex = m_path[m_internal_time];
+if (boost::edge(m_path[m_internal_time],m_path[m_internal_time+1],g).second){
+        m_curr_edge = boost::edge(m_path[m_internal_time],m_path[m_internal_time+1],g).first;
+}
         m_internal_time++;
-        m_curr_edge = boost::edge(m_curr_vertex, m_path[m_internal_time], g).first;
     }
 
     bool arrived() const{
-        return m_path[m_internal_time+1] == m_dest_vertex;
+        return m_curr_edge == m_dest_edge;
     }
 
     int get_id()const{  
         return m_id;
     }
 
-    double get_distance_left(Graph const& g){
-        return boost::get_dijkstra_shortest_path(m_curr_vertex,m_dest_vertex,g).second;
-    }
+    /* double get_distance_left(Graph const& g,Graph const& g_dual, std::map<Edge,Vertex>& map){
+        return boost::get_dijkstra_shortest_path(m_curr_edge,m_dest_edge,g,g_dual, map).second;
+    } */
 
 };
 

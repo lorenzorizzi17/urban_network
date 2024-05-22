@@ -69,7 +69,7 @@ namespace boost{
             lines[0].position = starting_point;
             lines[1].position = target_point;
             int occ = 0;
-            std::for_each(agents.begin(),agents.end(),[&](Agent const& a){if(a.get_edge()==*e){occ++;}});
+            std::for_each(agents.begin(),agents.end(),[&](Agent const& a){if(a.get_road()==*e){occ++;}});
             switch (occ)
             {
             case 0:

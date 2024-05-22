@@ -1,9 +1,28 @@
+#ifndef RANDOMIZE
+#define RANDOMIZE
+
 #include<iostream>
 #include<algorithm>
 #include<random>
 #include"./alias.hpp"
 
 namespace boost{
+
+    Edge get_random_edge(Graph const& g){
+        Iter_Edge ei = boost::edges(g).first;
+        int num_e = std::distance(boost::edges(g).first, boost::edges(g).second);
+        std::advance(ei,std::rand()/num_e);
+        return *ei;
+    }
+
+    Iter_Vertex get_random_vertex(Graph const& g){
+        Iter_Vertex vi = boost::vertices(g).first;
+        int num_e = boost::num_vertices(g);
+        std::advance(vi,std::rand()%num_e);
+        return vi;
+    }
+    
+
     template <typename Graph, typename Iter_E>
     void add_diagonal_roads(Graph &g, int N, int SIZE)
     {
@@ -84,3 +103,7 @@ namespace boost{
         }
     }
 }
+
+
+
+#endif

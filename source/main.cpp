@@ -8,6 +8,7 @@
 #include"./headers/agents.hpp"
 #include"./headers/randomize.hpp"
 #include"./headers/renderer.hpp"
+#include"./headers/flow.hpp"
 
 int Agent::m_instances = 0;
 
@@ -42,14 +43,14 @@ int main() {
     }
 
     //add a little bit of randomization
-    boost::add_diagonal_roads<Graph,int>(g,8,std::sqrt(N));
+    boost::add_diagonal_roads<Graph,int>(g,10,std::sqrt(N));
     boost::remove_random_edge<Graph,Iter_Edge>(g,5,std::sqrt(N));
     //randomize edges weight
     boost::randomize_weight_map_uniform<Graph, Iter_Edge>(g,5,7);    //as for now, uniform distribution. Maybe gaussian? 
     //boost::print_weight_map<Graph, Iter_Edge>(g);
     
     //creating dual graph
-    std::map<Vertex, Edge> dual_map;
+    std::map<Edge, Vertex> dual_map;
     Graph dual = boost::make_dual_graph(g,dual_map);
 
     //store both graphs in a .dot extension, ready to be rendered
@@ -62,9 +63,10 @@ int main() {
     file_dual.close();
     system("fdp -Tpng fig/graph_dual.dot -o fig/graph_dual.png");
 
+
     //running OD simulation
-    const int N_AGENTS = 100;
-    const double MIN_D = 30;
+    const int N_AGENTS = 10;
+    const double MIN_D = 40;
 
     //declaring and defining agents
     std::vector<Agent> agents;
@@ -77,15 +79,18 @@ int main() {
 
     int time = 0;
     int TIME_MAX = 400;
-    unsigned const display_height = 0.8* sf::VideoMode::getDesktopMode().height; //=768
+    unsigned const display_height = 0.8* sf::VideoMode::getDesktopMode().height; //
     int const fps = 60;
 
     //SFML rendering stuff
     sf::RenderWindow window(sf::VideoMode(display_height, display_height),"Roundabout", sf::Style::Default);
     window.setFramerateLimit(fps);
 
-std::cout << "\n STARTING SIMULATION...\n";
-    //graphics loop
+
+std::cout << "\x1b[31m" <<"################################################################"<< "\x1b[0m";
+std::cout << "\x1b[31m" << "\n            STARTING SIMULATION...            \n" << "\x1b[0m";
+std::cout << "\x1b[31m" <<"################################################################"<< "\x1b[0m" << std::endl;
+
     while (window.isOpen() && time < TIME_MAX){
 
         //event handler
@@ -97,15 +102,6 @@ std::cout << "\n STARTING SIMULATION...\n";
         }
         window.clear(sf::Color::White);
 
-
-        //draw theme
-        boost::render_graph(window,g,std::sqrt(N), agents,false);
-        //print info about current agent state
-        for(auto it = agents.begin(); it != agents.end() ;it++){
-            std::cerr << "Current agent position n. " << it->get_id() << " on the grid: " << it->get_edge() << " at time  t= " << time << std::endl;     
-        }
-
-
         //remove agents who arrived at their destination
         int size = agents.size();
         for (int i = size-1; i >= 0; i--)
@@ -116,14 +112,24 @@ std::cout << "\n STARTING SIMULATION...\n";
                 Agent a = Agent(g,MIN_D); agents.push_back(a);
             }
         }
+
+        //for every delta t, update agents position based on dijkstra shortest path
+        std::for_each(agents.begin(),agents.end(),[&](Agent& a){a.evolve_dijsktra(g);});
+
+        //print info about current agent state
+        for(auto it = agents.begin(); it != agents.end() ;it++){
+            std::cerr << "Current agent position n. " << it->get_id() << " on the grid: " << it->get_road() << " at time  t= " << time << std::endl;     
+        }
+        //draw them
         boost::render_graph(window,g,std::sqrt(N), agents,false);
+
+        
+        
         
        
         
 
-        //for every delta t, update agents position based on dijkstra shortest path
-        std::for_each(agents.begin(),agents.end(),[&](Agent& a){a.evolve_dijsktra(g);});
-        boost::render_graph(window,g,std::sqrt(N), agents,false);
+        
 
         
         
@@ -135,7 +141,7 @@ std::cout << "\n STARTING SIMULATION...\n";
         time++;
         std::cout << std::endl;
         window.display();
-        sf::sleep(sf::milliseconds(10));
+        sf::sleep(sf::milliseconds(100));
         
     }       
 }

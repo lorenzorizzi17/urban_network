@@ -23,18 +23,19 @@ namespace boost
         return false;
     }
 
-    template <typename Graph>
-    Graph make_dual_graph(Graph &g, std::map<Vertex, Edge>& map_dual)
+    Graph make_dual_graph(Graph &g, std::map<Edge, Vertex>& map_dual)
     {
         // let's first compute the total number of edges and create an equal amount of vertices in dual graph
         std::map<Edge, int> map;
+        std::map<Vertex,double> map_nodes;
         Graph g_res;
         int c = 0;
         for (Iter_Edge it = boost::edges(g).first; it != boost::edges(g).second; it++, c++)
         {
             Vertex v = boost::add_vertex(g_res);
             map[*it] = c;
-            map_dual[v] = *it;
+            map_dual[*it] = v;
+            map_nodes[v] = get(boost::edge_weight,g)[*it];
         }
 
         // now we need to connect those
@@ -49,7 +50,6 @@ namespace boost
                 int j = map[*it1];
                 if ((j != map[*it]) && (!are_connected(map[*it], j, g_res)))
                 {
-                    // we should check whether those two vertices are already connected
                     boost::add_edge(j, map[*it], g_res);
                 }
             }
@@ -58,11 +58,19 @@ namespace boost
                 int j = map[*it1];
                 if ((j != map[*it]) && (!are_connected(map[*it], j, g_res)))
                 {
-                    // we should check whether those two vertices are already connected
                     boost::add_edge(j, map[*it], g_res);
                 }
             }
         }
+
+        //for dijkstra to work, we need to put weights on every edges. Since only nodes here represents something physical (roads), we
+        // can just assume that every edge has a weight equal to the sum of weight of every nodes connecting to it
+        for (Iter_Edge it = boost::edges(g_res).first; it != boost::edges(g_res).second; it++){
+            Vertex v1 = boost::source(*it,g_res);
+            Vertex v2 = boost::target(*it,g_res);
+            get(boost::edge_weight,g_res)[*it] += double(((map_nodes[v1]+map_nodes[v2]))/2);
+        }
+
         return g_res;
     }
 
