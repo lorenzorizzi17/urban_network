@@ -23,7 +23,7 @@ namespace boost
         return false;
     }
 
-    Graph make_dual_graph(Graph &g, std::map<Edge, Vertex>& map_dual)
+    Graph make_dual_graph(Graph &g, std::map<Vertex, Edge>& map_dual)
     {
         // let's first compute the total number of edges and create an equal amount of vertices in dual graph
         std::map<Edge, int> map;
@@ -34,7 +34,7 @@ namespace boost
         {
             Vertex v = boost::add_vertex(g_res);
             map[*it] = c;
-            map_dual[*it] = v;
+            map_dual[v] = *it;
             map_nodes[v] = get(boost::edge_weight,g)[*it];
         }
 

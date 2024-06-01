@@ -14,7 +14,7 @@ namespace boost {
         if(road == agents.end()){
             return;
         } else {
-            road->evolve_dijsktra(g);
+            road->evolve_dijsktra();
         }
     }
 }

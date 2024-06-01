@@ -50,8 +50,9 @@ int main() {
     //boost::print_weight_map<Graph, Iter_Edge>(g);
     
     //creating dual graph
-    std::map<Edge, Vertex> dual_map;
+    std::map<Vertex, Edge> dual_map;
     Graph dual = boost::make_dual_graph(g,dual_map);
+    
 
     //store both graphs in a .dot extension, ready to be rendered
     std::ofstream file("fig/graph.dot");
@@ -72,7 +73,7 @@ int main() {
     std::vector<Agent> agents;
     for (int n = 0; n < N_AGENTS; n++)
     {
-        Agent a = Agent(g,MIN_D);
+        Agent a = Agent(dual,MIN_D, dual_map);
         agents.push_back(a);
     }
     std::cout << std::endl;
@@ -109,12 +110,12 @@ std::cout << "\x1b[31m" <<"#####################################################
             if(agents[i].arrived()){
                 std::cout << "Agent n. " << agents[i].get_id() << " has arrived. ";
                 agents.erase(agents.begin()+i);
-                Agent a = Agent(g,MIN_D); agents.push_back(a);
+                Agent a = Agent(dual,MIN_D,dual_map); agents.push_back(a);
             }
         }
 
         //for every delta t, update agents position based on dijkstra shortest path
-        std::for_each(agents.begin(),agents.end(),[&](Agent& a){a.evolve_dijsktra(g);});
+        std::for_each(agents.begin(),agents.end(),[&](Agent& a){a.evolve_dijsktra();});
 
         //print info about current agent state
         for(auto it = agents.begin(); it != agents.end() ;it++){
@@ -141,7 +142,7 @@ std::cout << "\x1b[31m" <<"#####################################################
         time++;
         std::cout << std::endl;
         window.display();
-        sf::sleep(sf::milliseconds(100));
+        sf::sleep(sf::milliseconds(1000));
         
     }       
 }

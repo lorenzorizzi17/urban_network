@@ -95,9 +95,11 @@ namespace boost
         std::vector<Vertex> p(boost::num_vertices(g));
         // This is to store the distances
         std::vector<double> d(boost::num_vertices(g));
-        //run dijkstra departing from vi. The algorithm will write in d the distances from vi to any other nodes
-        boost::dijkstra_shortest_paths(g, vi, predecessor_map(boost::make_iterator_property_map(p.begin(), get(boost::vertex_index, g))).distance_map(boost::make_iterator_property_map(d.begin(), get(boost::vertex_index, g))));
-        //selecting a random arrival node based on distance 
+        //run dijkstra departing from vi. The algorithm will write in d the distances from vi to any other nodes (NAMED PARAMETERS BGL)
+        boost::dijkstra_shortest_paths(g, vi, 
+                                        predecessor_map(boost::make_iterator_property_map(p.begin(), get(boost::vertex_index, g))) .
+                                        distance_map(boost::make_iterator_property_map(d.begin(), get(boost::vertex_index, g))) );
+        //selecting a random arrival node whose distance is at least MIN_DIST
         int i = std::rand() & d.size();
         double distance = d[i];
         while (distance < MIN_DIST){
