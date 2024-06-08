@@ -12,7 +12,6 @@ class djk_index_printer : public boost::default_dijkstra_visitor
 private:
     PropertyEdgeVertex m_name_map;
     PropertyMapVertex m_index_map;
-
 public:
     djk_index_printer(PropertyEdgeVertex weight_map, PropertyMapVertex index_map) : m_name_map(weight_map), m_index_map(index_map) {} // ctor
 

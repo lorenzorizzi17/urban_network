@@ -47,9 +47,11 @@ namespace boost
 
     void print_info(Vertex v, Graph& g, int time, std::map<Vertex,Edge> map_dual){
         std::list<std::shared_ptr<Agent>> &queue = boost::get(boost::vertex_agents, g, v);
+        if(queue.size()!=0){
         std::cout << "At time t = " << time << ", in road " << map_dual.at(v) << " there are agent id: " ;
         std::for_each(queue.begin(),queue.end(), [](std::shared_ptr<Agent> const& a_ptr){std::cout << a_ptr->get_id() << " ";});  
         std::cout << std::endl;
+        }
     }
 }
 

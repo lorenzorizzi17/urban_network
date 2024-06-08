@@ -12,25 +12,10 @@
 
 int Agent::m_instances = 0;
 
-namespace std
-{
-    template <typename T>
-    std::istream &operator>>(std::istream &in, std::pair<T, T> &p)
-    {
-        in >> p.first >> p.second;
-        return in;
-    }
-
-    template <typename T>
-    std::ostream &operator<<(std::ostream &out, std::pair<T, T> const &p)
-    {
-        out << p.first << " " << p.second;
-        return out;
-    }
-};
 
 int main()
 {
+    Application
     srand(time(NULL));
     // N is the dimension of the urban network (number of crosspoints)
     const int N = 100;
@@ -67,9 +52,8 @@ int main()
     boost::write_graphviz(file_dual, dual);
     file_dual.close();
     system("fdp -Tpng fig/graph_dual.dot -o fig/graph_dual.png");
-
     // running OD simulation
-    const int N_AGENTS = 100;
+    const int N_AGENTS = 1;
     const double MIN_D = 40;
 
     boost::add_agents(dual, N_AGENTS, MIN_D, dual_map);
@@ -90,7 +74,6 @@ int main()
 
     while (window.isOpen() && time < TIME_MAX)
     {
-
         // event handler
         sf::Event event;
         while (window.pollEvent(event))

@@ -94,6 +94,10 @@ public:
     {
         m_trav = b;
     }
+
+    Vertex get_next_vertex() const {
+        return m_path[m_internal_time];
+    }
 };
 
 
