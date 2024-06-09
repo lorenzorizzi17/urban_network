@@ -1,3 +1,5 @@
+#ifndef RENDER
+#define RENDER
 
 #include "./alias.hpp"
 #include "./agents.hpp"
@@ -62,7 +64,7 @@ namespace boost
             // Ruota il rettangolo per allinearlo alla linea tra i due punti
             rectangle.setRotation(angle);
             int occ = boost::get(boost::vertex_agents, dual, *v).size();
-            rectangle.setFillColor(interpolateColor(occ,10));
+            rectangle.setFillColor(interpolateColor(occ,40));
 
             w.draw(rectangle);
         }
@@ -136,3 +138,5 @@ namespace boost
     */
 
 };
+
+#endif

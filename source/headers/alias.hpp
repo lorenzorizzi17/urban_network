@@ -1,7 +1,7 @@
 #ifndef ALIAS
 #define ALIAS
 
-#include</home/lorenzo17/boost/boost/graph/adjacency_list.hpp>
+#include<./boost/graph/adjacency_list.hpp>
 #include<random>
 #include<memory>
 

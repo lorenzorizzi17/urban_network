@@ -5,6 +5,7 @@
 #include<algorithm>
 #include<random>
 #include"./alias.hpp"
+#include"dual_graph.hpp"
 
 namespace boost{
 
@@ -59,6 +60,8 @@ namespace boost{
                             boost::add_edge(i * SIZE + j, (i + 1) * SIZE + j + 1, g); l = 5;
                             break;
                         };
+                    default:
+                        break;
                     }
                 which_diag = std::rand() % 4;
             }

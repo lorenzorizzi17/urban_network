@@ -1,0 +1,6 @@
+ANCORA DA MIGLIORARE
+
+
+1) escludi la possibilità che venga aggiunto strade diagonali che rendano il grafo non planare
+2) se le strade superano il limite di colore, il colore perde senso (graficamente) 
+3) meccanismo di capacità massima

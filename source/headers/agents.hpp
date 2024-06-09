@@ -14,12 +14,12 @@
 
 namespace boost
 {
-    void add_agents(Graph &g_dual, int N_AGENTS, double MIN_DIST, std::map<Vertex, Edge> dual_map)
+    void add_agents(Graph &g_dual, int N, std::map<Vertex, Edge> &dual_map)
     {
-        for (int i = 0; i < N_AGENTS; i++)
+        for (int i = 0; i < N; i++)
         {
             Vertex v = *boost::get_random_vertex(g_dual);
-            boost::get(boost::vertex_agents, g_dual, v).push_back(std::make_shared<Agent>(g_dual,v,MIN_DIST,dual_map));
+            boost::get(boost::vertex_agents, g_dual, v).push_back(std::make_shared<Agent>(g_dual, v, dual_map));
         }
     }
 }
@@ -33,13 +33,13 @@ private:
     int m_internal_time = 1;
     int m_id = 0;
     std::map<Vertex, Edge> m_dual_map;
-    Graph* m_dual;
+    Graph *m_dual;
 
 public:
     static int m_instances;
     bool m_trav = false;
     // std::map here is just for debug
-    Agent(Graph &g_dual, Vertex spawn_point, double MIN_DIST, std::map<Vertex, Edge> &dual_map)
+    Agent(Graph &g_dual, Vertex spawn_point, std::map<Vertex, Edge> dual_map)
     {
         m_internal_time = 1;
         m_id = m_instances;
@@ -50,14 +50,15 @@ public:
         m_curr_road = spawn_point;
         // randomly chose destination vertex and compute dijkstra shortest path
         double distance = 0;
-        std::tie(m_dest_road, m_path, distance) = boost::get_vertex_based_on_dijkstra_shortest_path(m_curr_road, g_dual, MIN_DIST);
+        std::tie(m_dest_road, m_path, distance) = boost::get_vertex_based_on_dijkstra_shortest_path(m_curr_road, g_dual);
         // prints some info
-        std::cout << "Agents n. " << this->get_id() << " born in road: " << this->get_road() << ", dest in " << this->get_road_destination() << " (d = " << distance << ")" << std::endl;
+        std::cerr << "Agents n. " << this->get_id() << " born in road: " << this->get_vertex() << ", dest in " << this->get_vertex_destination() << " (d = " << distance << ")" << std::endl;
     }
 
-    ~Agent(){
+    ~Agent()
+    {
         std::cout << "Agents n. " << m_id << " has arrived" << std::endl;
-        boost::add_agents(*m_dual,1,DIST_MIN,m_dual_map);
+        boost::add_agents(*m_dual,1,m_dual_map);
     }
 
     Vertex get_vertex() const
@@ -75,6 +76,10 @@ public:
         return m_dual_map.at(m_dest_road);
     }
 
+    Vertex get_vertex_destination() const{
+        return m_dest_road;
+    }
+
     void set_edge(Vertex const &v)
     {
         m_curr_road = v;
@@ -90,6 +95,7 @@ public:
         m_curr_road = m_path[m_internal_time];
         m_internal_time++;
         m_trav = true;
+        
     }
 
     bool arrived() const
@@ -112,12 +118,10 @@ public:
         m_trav = b;
     }
 
-    Vertex get_next_vertex() const {
+    Vertex get_next_vertex() const
+    {
         return m_path[m_internal_time];
     }
 };
-
-
-
 
 #endif

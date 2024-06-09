@@ -88,7 +88,7 @@ namespace boost
     }
 
 
-    std::tuple<Vertex,std::vector<Vertex>,double> get_vertex_based_on_dijkstra_shortest_path(Vertex const& vi, Graph const& g, double MIN_DIST){
+    std::tuple<Vertex,std::vector<Vertex>,double> get_vertex_based_on_dijkstra_shortest_path(Vertex const vi, Graph const& g){
         boost::property_map<Graph, boost::vertex_index_t>::type map_indices = boost::get(boost::vertex_index, g);
         // This is to store the predecessor
         std::vector<Vertex> p(boost::num_vertices(g));
@@ -99,10 +99,13 @@ namespace boost
                                         predecessor_map(boost::make_iterator_property_map(p.begin(), get(boost::vertex_index, g))) .
                                         distance_map(boost::make_iterator_property_map(d.begin(), get(boost::vertex_index, g))) );
         //selecting a random arrival node whose distance is at least MIN_DIST
-        int i = std::rand() & d.size();
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<> distrib(0, d.size() - 1);
+        int i = distrib(gen);
         double distance = d[i];
-        while (distance < MIN_DIST){
-            i = std::rand() & d.size();
+        while (distance < MIN_DIST_DIJKSTRA){
+            i = distrib(gen);
             distance = d[i];
         }
         Iter_Vertex ivf = boost::vertices(g).first;
