@@ -12,7 +12,17 @@
   pmap[*e].push_back(a);
 } */
 
-
+namespace boost
+{
+    void add_agents(Graph &g_dual, int N_AGENTS, double MIN_DIST, std::map<Vertex, Edge> dual_map)
+    {
+        for (int i = 0; i < N_AGENTS; i++)
+        {
+            Vertex v = *boost::get_random_vertex(g_dual);
+            boost::get(boost::vertex_agents, g_dual, v).push_back(std::make_shared<Agent>(g_dual,v,MIN_DIST,dual_map));
+        }
+    }
+}
 
 class Agent
 {
@@ -23,6 +33,7 @@ private:
     int m_internal_time = 1;
     int m_id = 0;
     std::map<Vertex, Edge> m_dual_map;
+    Graph* m_dual;
 
 public:
     static int m_instances;
@@ -34,6 +45,7 @@ public:
         m_id = m_instances;
         m_instances++;
         m_dual_map = dual_map;
+        m_dual = &g_dual;
         // randomly chose first vertex
         m_curr_road = spawn_point;
         // randomly chose destination vertex and compute dijkstra shortest path
@@ -41,6 +53,11 @@ public:
         std::tie(m_dest_road, m_path, distance) = boost::get_vertex_based_on_dijkstra_shortest_path(m_curr_road, g_dual, MIN_DIST);
         // prints some info
         std::cout << "Agents n. " << this->get_id() << " born in road: " << this->get_road() << ", dest in " << this->get_road_destination() << " (d = " << distance << ")" << std::endl;
+    }
+
+    ~Agent(){
+        std::cout << "Agents n. " << m_id << " has arrived" << std::endl;
+        boost::add_agents(*m_dual,1,DIST_MIN,m_dual_map);
     }
 
     Vertex get_vertex() const
@@ -101,26 +118,6 @@ public:
 };
 
 
-namespace boost
-{
-    void add_agents(Graph &g_dual, int N_AGENTS, double MIN_DIST, std::map<Vertex, Edge> dual_map)
-    {
-        for (int i = 0; i < N_AGENTS; i++)
-        {
-            Vertex v = *boost::get_random_vertex(g_dual);
-            boost::get(boost::vertex_agents, g_dual, v).push_back(std::make_shared<Agent>(g_dual,v,MIN_DIST,dual_map));
-        }
-    }
 
-    /* void remove_arrived_agents(Graph &g_dual)
-    {
-        for (auto it = boost::vertices(g_dual).first; it != boost::vertices(g_dual).second; it++)
-        {
-            boost::get(boost::vertex_agents, g_dual, *it).erase(std::remove_if(boost::get(boost::vertex_agents, g_dual, *it).begin(), boost::get(boost::vertex_agents, g_dual, *it).end(), [](Agent const& a)
-                                                                               { return a.arrived(); }),
-                                                                boost::get(boost::vertex_agents, g_dual, *it).end());
-        }
-    } */
-}
 
 #endif
