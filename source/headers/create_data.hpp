@@ -8,7 +8,7 @@
 namespace boost{
     std::string check(std::pair<int,int> const& p, std::vector<std::pair<int,int>>& v, bool eof) {
         auto it = std::find_if(v.begin(),v.end(),[&](std::pair<int,int> const& pa){return ((p.first==pa.first)&&(p.second==pa.second))||((p.first==pa.second)&&(p.second==pa.first));});
-        if (it==v.end()){
+        if (true){
             v.push_back(p);
             if(eof){
                 return (std::to_string(p.first) + " "+ std::to_string(p.second));

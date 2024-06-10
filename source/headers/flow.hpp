@@ -21,10 +21,10 @@ namespace boost
                       { boost::reactivate_flag_v(v, g); });
     }
 
-    void flow(Vertex& v, Graph &g_dual, int MAX_FLOW)
+    void flow(Vertex& v, Graph &g_dual, int flow_rate)
     {
         std::list<std::shared_ptr<Agent>> &queue = boost::get(boost::vertex_agents, g_dual, v);
-        for (int c = 0; c < MAX_FLOW; c++)
+        for (int c = 0; c < flow_rate; c++)
         {
             if (queue.size() != 0 && !queue.front()->has_traveled())
             {
@@ -32,10 +32,10 @@ namespace boost
                     return;
                 }
                 queue.front()->evolve_dijsktra();
-                std::shared_ptr<Agent> new_ptr = queue.front();
-                boost::get(boost::vertex_agents, g_dual, queue.front()->get_vertex()).push_back(new_ptr);
+                //std::shared_ptr<Agent> new_ptr = queue.front();
+                boost::get(boost::vertex_agents, g_dual, queue.front()->get_vertex()).push_back(std::move(queue.front()));
 
-                queue.front() = nullptr;
+                //queue.front() = nullptr;
                 queue.pop_front();
             }
             else
@@ -57,7 +57,7 @@ namespace boost
         std::list<std::shared_ptr<Agent>> &queue = boost::get(boost::vertex_agents, g, v);
         if (queue.size() != 0)
         {
-            std::cout << "At time t = " << time << ", in road " << map_dual.at(v) << " there are agent id: ";
+            std::cout << "At time t = " << time << ", in road (" << boost::source(map_dual.at(v),g) << ", " << boost::target(map_dual.at(v),g) << ") there are agent id: ";
             std::for_each(queue.begin(), queue.end(), [](std::shared_ptr<Agent> const &a_ptr)
                           { std::cerr << a_ptr->get_id() << " "; });
             std::cerr << std::endl;

@@ -19,9 +19,9 @@ namespace boost {
 //typedef of graph
 typedef boost::adjacency_list<boost::vecS,                                  // stores out edges of each vertex in a std::list
                               boost::vecS,                                  // stores vertex set in a std::vector
-                              boost::undirectedS,                           // graph is undirected
-                              boost::property<boost::vertex_agents_t, std::list<std::shared_ptr<Agent>>>, // vertex property: none
-                              boost::property<boost::edge_weight_t, double> // edge property: a weight and a vector of Agent
+                              boost::directedS,                           // graph is undirected
+                              boost::property<boost::vertex_agents_t, std::list<std::shared_ptr<Agent>>>, // vertex property: a list of agents heap allocated
+                              boost::property<boost::edge_weight_t, double> // edge property: a weight 
                               > Graph;
 
 typedef boost::graph_traits<Graph>::vertex_descriptor Vertex;

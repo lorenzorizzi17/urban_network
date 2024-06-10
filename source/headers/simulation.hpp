@@ -57,7 +57,7 @@ public:
 
             // for every delta t, update agents position based on dijkstra shortest path
             std::for_each(boost::vertices(m_dual).first, boost::vertices(m_dual).second, [&](Vertex v)
-                          {boost::flow(v, m_dual, 3);});
+                          {boost::flow(v, m_dual, FLOW_RATE);});
             std::for_each(boost::vertices(m_dual).first, boost::vertices(m_dual).second, [&](Vertex v)
                           {boost::erase_agents(v, m_dual);});
             std::for_each(boost::vertices(m_dual).first, boost::vertices(m_dual).second, [&](Vertex v)
@@ -71,8 +71,18 @@ public:
             m_time++;
             std::cout << std::endl;
             m_window.display();
-            //sf::sleep(sf::milliseconds(100));
+            sf::sleep(sf::milliseconds(TIME_TO_SLEEP));
         }
+    }
+
+    //debug
+
+    void printConversionMap() const {
+        std::for_each(m_conv_map.begin(),m_conv_map.end(),[](std::pair<Vertex,Edge> const& pair){std::cout << "Vertex n. " << pair.first << " = " << pair.second << std::endl; });
+    }
+
+    void printWeights() {
+        boost::print_weight_map(m_graph);
     }
 };
 

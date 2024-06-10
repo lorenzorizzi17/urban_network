@@ -45,23 +45,23 @@ namespace boost
         for (Iter_Edge it = boost::edges(g).first; it != boost::edges(g).second; it++)
         {
             // elaborate source and target node
-            Vertex source = boost::source(*it, g);
+            //Vertex source = boost::source(*it, g);
             Vertex target = boost::target(*it, g);
-            // let's first examine source node
-            for (Iter_OutEdge it1 = boost::out_edges(source, g).first; it1 != boost::out_edges(source, g).second; it1++)
+            // we should not consider source node
+            /* for (Iter_OutEdge it1 = boost::out_edges(source, g).first; it1 != boost::out_edges(source, g).second; it1++)
             {
                 int j = map[*it1];
                 if ((j != map[*it]) && (!are_connected(map[*it], j, g_res)))
                 {
                     boost::add_edge(j, map[*it], g_res);
                 }
-            }
+            } */
             for (Iter_OutEdge it1 = boost::out_edges(target, g).first; it1 != boost::out_edges(target, g).second; it1++)
             {
                 int j = map[*it1];
                 if ((j != map[*it]) && (!are_connected(map[*it], j, g_res)))
                 {
-                    boost::add_edge(j, map[*it], g_res);
+                    boost::add_edge(map[*it],j, g_res);
                 }
             }
         }

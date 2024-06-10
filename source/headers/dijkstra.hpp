@@ -122,6 +122,7 @@ namespace boost
             res.push_back(pred);
         }
         std::reverse(res.begin(), res.end());
+
         return std::make_tuple(vf,res, distance);
     };
 }

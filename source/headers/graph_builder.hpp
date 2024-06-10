@@ -23,8 +23,8 @@ Graph build_graph(int const N){
     }
 
     // add a little bit of randomization
-    boost::add_diagonal_roads<Graph, int>(g, 10, std::sqrt(N));
-    boost::remove_random_edge<Graph, Iter_Edge>(g, 5, std::sqrt(N));
+    boost::add_diagonal_roads<Graph, int>(g, 0, std::sqrt(N));
+    boost::remove_random_edge<Graph, Iter_Edge>(g, 0, std::sqrt(N));
     // randomize edges weight
     boost::randomize_weight_map_uniform<Graph, Iter_Edge>(g, 5, 7); // as for now, uniform distribution. Maybe gaussian?
     // boost::print_weight_map<Graph, Iter_Edge>(g);

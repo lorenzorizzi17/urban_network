@@ -56,7 +56,6 @@ namespace boost
 
             // Crea il rettangolo
             sf::RectangleShape rectangle(sf::Vector2f(distance, 5.f)); // 5.f è la larghezza del rettangolo (abbastanza stretto)
-            rectangle.setFillColor(sf::Color::Red);
 
             // Imposta la posizione del rettangolo al punto iniziale
             rectangle.setPosition(starting_point);
@@ -64,7 +63,7 @@ namespace boost
             // Ruota il rettangolo per allinearlo alla linea tra i due punti
             rectangle.setRotation(angle);
             int occ = boost::get(boost::vertex_agents, dual, *v).size();
-            rectangle.setFillColor(interpolateColor(occ,40));
+            rectangle.setFillColor(interpolateColor(occ,MAX_CAP));
 
             w.draw(rectangle);
         }

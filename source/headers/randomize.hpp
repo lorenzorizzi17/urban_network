@@ -80,13 +80,12 @@ namespace boost{
         }
     }
 
-    template <typename Graph, typename Edge_it>
     void print_weight_map(Graph &g)
     {
         PropertyMap WeightMap = get(boost::edge_weight, g);
-        for (Edge_it it_e = boost::edges(g).first; it_e != boost::edges(g).second; it_e++)
+        for (Iter_Edge it_e = boost::edges(g).first; it_e != boost::edges(g).second; it_e++)
         {
-            std::cout << "Edge that connects node " << boost::source(*it_e, g) << " to " << boost::target(*it_e, g) << " has a weight = " << WeightMap[*it_e] << std::endl;
+            std::cerr << "Edge that connects node " << boost::source(*it_e, g) << " to " << boost::target(*it_e, g) << " has a weight = " << WeightMap[*it_e] << std::endl;
         }
     }
 
