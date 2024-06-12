@@ -52,13 +52,14 @@ public:
         double distance = 0;
         std::tie(m_dest_road, m_path, distance) = boost::get_vertex_based_on_dijkstra_shortest_path(m_curr_road, g_dual);
         // prints some info
-        std::cerr << "Agents n. " << this->get_id() << " born in road: " << this->get_vertex() << ", dest in " << this->get_vertex_destination() << " (d = " << distance << ")" << std::endl;
+        DEBUG("Agents n. " + std::to_string(this->get_id()) + " born in road: " + std::to_string(this->get_vertex()) + ", dest in " + std::to_string(this->get_vertex_destination()) + " (d = " + std::to_string(distance) + ")");
     }
 
     ~Agent()
     {
-        std::cout << "Agents n. " << m_id << " has arrived" << std::endl;
+        DEBUG("Agents n. " + std::to_string(m_id) + " has arrived");
         boost::add_agents(*m_dual,1,m_dual_map);
+        
     }
 
     Vertex get_vertex() const

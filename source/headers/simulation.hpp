@@ -16,25 +16,34 @@ private:
     Graph m_dual;
     std::map<Vertex, Edge> m_conv_map;
     int m_time = 0;
+    
 
 private:
     void init()
     {
         // building graph and dual graph
+        DEBUG("Building graph...");
         m_graph = build_graph(N_NODES);
+        DEBUG("Direct graph has been successfull built");
+        DEBUG("Building dual graph...");
         m_dual = boost::make_dual_graph(m_graph, m_conv_map);
+        DEBUG("Successfully built dual graph");
         print_graph(m_graph, m_dual);
+        DEBUG("Direct and dual graph have been correctly drawn");
     }
 
 public:
     Simulation(int N) : m_window{sf::RenderWindow(sf::VideoMode(display_height, display_height), "Simulation", sf::Style::Default)}
     {
+        DEBUG("Starting simulation construction...");
         init();
+        DEBUG("Creating agents...");
         boost::add_agents(m_dual, N_AGENTS, m_conv_map);
         m_window.setFramerateLimit(60);
+        DEBUG("Simulation is now ready to start");
     }
 
-    void run()
+    void run(int ti)
     {
 
         std::cout << "\x1b[31m" << "################################################################" << "\x1b[0m";
@@ -42,7 +51,7 @@ public:
                   << "\x1b[0m";
         std::cout << "\x1b[31m" << "################################################################" << "\x1b[0m" << std::endl;
 
-        while (m_window.isOpen())
+        while (m_window.isOpen() && m_time < ti)
         {
             // event handler
             sf::Event event;
@@ -84,6 +93,7 @@ public:
     void printWeights() {
         boost::print_weight_map(m_graph);
     }
+
 };
 
 #endif

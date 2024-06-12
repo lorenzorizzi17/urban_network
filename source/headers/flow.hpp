@@ -57,7 +57,7 @@ namespace boost
         std::list<std::shared_ptr<Agent>> &queue = boost::get(boost::vertex_agents, g, v);
         if (queue.size() != 0)
         {
-            std::cout << "At time t = " << time << ", in road (" << boost::source(map_dual.at(v),g) << ", " << boost::target(map_dual.at(v),g) << ") there are agent id: ";
+            std::cout << "At time t = " << time << ", in road (" << boost::source(map_dual.at(v),g) << boost::target(map_dual.at(v),g) << ")"  << "( v." << v << "), live agents id: ";
             std::for_each(queue.begin(), queue.end(), [](std::shared_ptr<Agent> const &a_ptr)
                           { std::cerr << a_ptr->get_id() << " "; });
             std::cerr << std::endl;

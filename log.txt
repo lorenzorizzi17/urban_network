@@ -2,10 +2,12 @@ ANCORA DA MIGLIORARE
 
 
 1) escludi la possibilità che venga aggiunto strade diagonali che rendano il grafo non planare
-2) se le strade superano il limite di colore, il colore perde senso (graficamente) 
 3) implementazione doppia strada (altrimenti equilibrio statico degli agenti)
-  3.1) ok fatta, domande: posso invertire il senso di marcia su di una strada?
-  3.2) riaggiungi strade diagonali ed eliminazione strade (senso di marcia?)
-  3.3) Rendi simmetrico il peso delle strade
-4) doc
+  3.1) ok fatta, domande: posso invertire il senso di marcia su di una strada? Per ora no
+  3.2) Strade diagonali --> senso unico?
+  3.3) Strade eliminate --> in toto o solo un senso di marcia?
+  3.3) Rimane la situazione di equilibrio strana
+4) doc0
 5) a che carico misure le \pi_ij? 
+6) bottleneck
+7) motore random

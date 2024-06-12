@@ -24,13 +24,12 @@ namespace boost{
     }
     
 
-    template <typename Graph, typename Iter_E>
     void add_diagonal_roads(Graph &g, int N, int SIZE)
     {
-        // first, select a random vertices in the interior of the graph
+        // first, select a random vertices in the interior of the direct graph
         for (int k = 0; k < N; k++)
         {
-            //selecting a random vertex based on cartesian coordinates (i,j)
+            //selecting a random vertex based on cartesian coordinates (i,j) (only internal nodes)
             int i, j = 0;
             while (((i == 0) || (j == 0) || (i == SIZE - 1) || (j == SIZE - 1)))
             {
@@ -42,7 +41,7 @@ namespace boost{
                 switch (which_diag){
                     case 0:
                         if(!boost::are_connected(i * SIZE + j, (i - 1) * SIZE + j - 1, g)){
-                            boost::add_edge(i * SIZE + j, (i - 1) * SIZE + j - 1, g); l =5;
+                            boost::add_edge(i * SIZE + j, (i - 1) * SIZE + j - 1, g); l = 5;
                             break;
                         };
                     case 1:
@@ -68,12 +67,11 @@ namespace boost{
         }
     }
 
-    template <typename Graph, typename Edge_it>
     void remove_random_edge(Graph &g, int N, int SIZE)
     {
         for (int i = 0; i < N; i++)
         {
-            Edge_it iti = boost::edges(g).first;
+            Iter_Edge iti = boost::edges(g).first;
             int rnd = std::rand() % (boost::num_edges(g));
             std::advance(iti, rnd);
             boost::remove_edge(*iti, g);
@@ -89,7 +87,6 @@ namespace boost{
         }
     }
 
-    template <typename Graph, typename Edge_it>
     void randomize_weight_map_uniform(Graph &g, double a, double b)
     {
         PropertyMap WeightMap = get(boost::edge_weight, g);
@@ -98,11 +95,21 @@ namespace boost{
             std::cout << "\nBoundaries of the uniform distribution not valid: Function aborted\n";
             return;
         }
-        for (Edge_it it_e = boost::edges(g).first; it_e != boost::edges(g).second; it_e++)
+        for (int l = 0; l < boost::num_vertices(g); l++)
         {
-            double rnd = double(double(std::rand()) / RAND_MAX) * (b - a) + a;
-            WeightMap[*it_e] = rnd;
+            for (int m = l+1; m < boost::num_vertices(g); m++)
+            
+            {
+                double rnd = double(double(std::rand()) / RAND_MAX) * (b - a) + a; 
+                if (boost::are_connected(l,m,g)){
+                    WeightMap[boost::edge(l,m,g).first] = rnd; 
+                    if (boost::are_connected(m,l,g)){
+                        WeightMap[boost::edge(m,l,g).first] = rnd;
+                    }
+                }
+            }
         }
+        
     }
 }
 
