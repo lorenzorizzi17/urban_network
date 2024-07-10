@@ -166,9 +166,11 @@
     <ClInclude Include="src\headers\randomize.hpp" />
     <ClInclude Include="src\headers\renderer.hpp" />
     <ClInclude Include="src\headers\simulation.hpp" />
+    <ClInclude Include="src\headers\update_weights.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\manhattan_grid.dat" />
+    <None Include="doc\doc.md" />
     <None Include="fig\graph.dot" />
     <None Include="fig\graph_dual.dot" />
     <None Include="fig\graph_dual_paint.dot" />
@@ -177,6 +179,9 @@
     <Image Include="fig\graph.png" />
     <Image Include="fig\graph_dual.png" />
     <Image Include="fig\graph_dual_paint.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="fig\font.ttf" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />

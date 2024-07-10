@@ -18,6 +18,9 @@ namespace boost
         if (x == 0){
             return sf::Color::Black;
         }
+        if (x >= MAX_AGENTS) {
+            return sf::Color::Red;
+        }
 
         // Calcola le componenti RGB del colore interpolato
         int r = static_cast<int>(255 * x / MAX_AGENTS);        // Interpolazione lineare del rosso
@@ -65,7 +68,7 @@ namespace boost
             // Ruota il rettangolo per allinearlo alla linea tra i due punti
             rectangle.setRotation(angle);
             int occ = boost::get(&VertexProperty::queue, dual, *v).size();
-            rectangle.setFillColor(interpolateColor(occ,MAX_CAP+1));
+            rectangle.setFillColor(interpolateColor(occ,MAX_CAP));
 
             w.draw(rectangle);
         }

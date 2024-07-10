@@ -14,4 +14,12 @@ namespace boost {
     {
         boost::get(&VertexProperty::queue, g_dual, vi).push_back(std::make_shared<Agent>(g_dual, vi, vf, dual_map, n_debug));
     }
+
+    int d_check_sum(Graph const& g) {
+        int sum = 0;
+        for (auto it = boost::vertices(g).first; it != boost::vertices(g).second; it++) {
+            sum += get(&VertexProperty::queue, g, *it).size();
+        }
+        return sum;
+    }
 }

@@ -23,22 +23,7 @@ namespace boost
                       { boost::reactivate_flag_v(v, g); });
     }
 
-    void increase_perm_time(Graph &g){
-        std::for_each(boost::vertices(g).first, boost::vertices(g).second, [&](Vertex v)
-                      { std::list<std::shared_ptr<Agent>> &ref = boost::get(&VertexProperty::queue, g, v);
-                        std::for_each(ref.begin(), ref.end(), [](std::shared_ptr<Agent> &ptr_a)
-                                      { ptr_a->increase_permanence_time(); });
-                      });
-    }
-
-
-    void thermal_shake(Graph &g){
-        std::for_each(boost::vertices(g).first, boost::vertices(g).second, [&](Vertex v)
-                      { std::list<std::shared_ptr<Agent>> &ref = boost::get(&VertexProperty::queue, g, v);
-                        std::for_each(ref.begin(), ref.end(), [](std::shared_ptr<Agent> &ptr_a)
-                                      { if(ptr_a->get_perm_time()>WAITING_TIME){ptr_a->thermal_move();} });
-                      });
-    }
+  
 
 
     void flow(Vertex &v, Graph &g_dual, int flow_rate)
@@ -52,7 +37,7 @@ namespace boost
         auto it = queue.begin(); 
         while((it != queue.end())&& (c<flow_rate))
         {
-            if (!((*it)->has_traveled()) && get(&VertexProperty::queue, g_dual, (*it)->get_next_vertex()).size() <= MAX_CAP)
+            if (!((*it)->has_traveled()) && get(&VertexProperty::full, g_dual,v) == false)
             {
                     (*it)->evolve_dijsktra();
                     boost::get(&VertexProperty::queue, g_dual, (*it)->get_vertex()).push_back(std::move((*it)));
@@ -83,11 +68,13 @@ namespace boost
         if (queue.size() != 0)
         {
             DEBUG( "At time t = " + std::to_string(time) + ", in road(" + std::to_string(g[boost::source(map_dual.at(v), g)].index) + " - " + std::to_string(g[boost::target(map_dual.at(v),g)].index) + ")" + "(v." + std::to_string(dual[v].index)+ "), live agents id : ");
-            std::for_each(queue.begin(), queue.end(), [&](std::shared_ptr<Agent> const &a_ptr)
-                          { std::cerr << a_ptr->get_id() << " ( to " << dual[a_ptr->get_next_vertex()].index << "), "; });
-            std::cerr << std::endl;
+            std::for_each(queue.begin(), queue.end(), [&](std::shared_ptr<Agent> const& a_ptr)
+                { std::cout << a_ptr->get_id() << " ( to "; if (a_ptr->arrived()) { std::cout << "arrived. "; }
+                else { std::cout << dual[a_ptr->get_next_vertex()].index << "), "; };  });
+            std::cout << std::endl << std::endl;
         }
     }
+
 }
 
 #endif

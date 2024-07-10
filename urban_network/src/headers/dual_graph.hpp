@@ -6,6 +6,7 @@
 #include<random>
 #include<map>
 #include"./alias.hpp"
+#include"update_weights.hpp"
 
 
 namespace boost
@@ -64,9 +65,9 @@ namespace boost
         for (Iter_Edge it = boost::edges(g_res).first; it != boost::edges(g_res).second; it++){
             Vertex v1 = boost::source(*it,g_res);
             Vertex v2 = boost::target(*it,g_res);
-            get(boost::edge_weight,g_res)[*it] += double(((map_nodes[v1]+map_nodes[v2]))/2);
+            get(&EdgeProperty::initial_weight,g_res)[*it] += double(((map_nodes[v1]+map_nodes[v2]))/2);
         }
-
+        set_weights(g_res);
         return g_res;
     }
 

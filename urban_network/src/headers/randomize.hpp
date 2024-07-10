@@ -13,6 +13,12 @@ namespace boost{
         Iter_Vertex vi = boost::vertices(g).first;
         int num_e = boost::num_vertices(g);
         std::advance(vi,std::rand()%num_e);
+        //strip down from here
+        while (get(&VertexProperty::queue,g,*vi).size() > MAX_CAP) {
+            vi = boost::vertices(g).first;
+            int num_e = boost::num_vertices(g);
+            std::advance(vi, std::rand() % num_e);
+        }
         return vi;
     }
 
@@ -87,13 +93,13 @@ namespace boost{
         PropertyMap WeightMap = get(boost::edge_weight, g);
         for (Iter_Edge it_e = boost::edges(g).first; it_e != boost::edges(g).second; it_e++)
         {
-            std::cerr << "Edge that connects node " << boost::source(*it_e, g) << " to " << boost::target(*it_e, g) << " has a weight = " << WeightMap[*it_e] << std::endl;
+            std::cerr << "Edge that connects node " << g[boost::source(*it_e, g)].index << " to " << g[boost::target(*it_e, g)].index << " has a weight = " << WeightMap[*it_e] << std::endl;
         }
     }
 
     void randomize_weight_map_uniform(Graph &g, double a, double b)
     {
-        PropertyMap WeightMap = get(boost::edge_weight, g);
+        auto WeightMap = get(&EdgeProperty::initial_weight, g);
         if (a > b)
         {
             std::cout << "\nBoundaries of the uniform distribution not valid: Function aborted\n";

@@ -48,12 +48,16 @@
     <ClInclude Include="src\headers\simulation.hpp">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+    <ClInclude Include="src\headers\update_weights.hpp">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="data\manhattan_grid.dat" />
     <None Include="fig\graph.dot" />
     <None Include="fig\graph_dual.dot" />
     <None Include="fig\graph_dual_paint.dot" />
+    <None Include="doc\doc.md" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="fig\graph_dual.png">
@@ -65,6 +69,9 @@
     <Image Include="fig\graph_dual_paint.png">
       <Filter>File di risorse</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="fig\font.ttf" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">

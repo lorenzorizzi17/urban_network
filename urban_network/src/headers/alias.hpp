@@ -4,6 +4,7 @@
 #include<boost/graph/adjacency_list.hpp>
 #include<random>
 #include<memory>
+#include<iostream>
 
 //need at least declaration
 class Agent;
@@ -14,26 +15,26 @@ namespace boost {
   BOOST_INSTALL_PROPERTY(vertex, agents);
 }
 
-struct VertexProperty{
-  std::list<std::shared_ptr<Agent>> queue;
-  int index;
+struct VertexProperty {
+    std::list<std::shared_ptr<Agent>> queue;
+    int index;
+    bool full = false;
 };
 
-struct EdgeProperty{
-  int index;
+struct EdgeProperty {
+    int index;
+    double initial_weight;
 };
-
-
 
 
 //typedef of graph
 typedef boost::adjacency_list<boost::vecS,                                  // stores out edges of each vertex in a std::list
-                              boost::vecS,                                  // stores vertex set in a std::vector
-                              boost::directedS,                             // graph is directed
-                              VertexProperty, // vertex property: a list of agents heap allocated
-                              boost::property<boost::edge_weight_t, double,
-                              EdgeProperty> // edge property: a weight 
-                              > Graph;
+    boost::vecS,                                  // stores vertex set in a std::vector
+    boost::bidirectionalS,                             // graph is directed
+    VertexProperty, // vertex property: a list of agents heap allocated
+    boost::property<boost::edge_weight_t, double,
+    EdgeProperty> // edge property: a weight
+> Graph;
 
 
 typedef boost::graph_traits<Graph>::vertex_descriptor Vertex;
@@ -50,9 +51,7 @@ typedef boost::graph_traits<Graph>::vertices_size_type size_type;
 
 
 void DEBUG(std::string const& message){
-  #ifdef _DEBUG
     std::cout << "--DEBUG LOG --" << message << std::endl;
-  #endif
 }
 
 #endif

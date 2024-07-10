@@ -88,17 +88,20 @@ namespace boost
         std::size_t num_vertices = boost::num_vertices(g);
         int i = std::rand() % num_vertices;
         double distance = d[i];
-        while (distance < MIN_DIST_DIJKSTRA)
+        Iter_Vertex vf = boost::vertices(g).first;
+        std::advance(vf, i);
+        int occ = get(&VertexProperty::queue, g, *vf).size();
+        while (distance < MIN_DIST_DIJKSTRA || occ >= MAX_CAP )
         {
-            i = std::rand() % boost::num_vertices(g);
+            i = std::rand() % num_vertices;
             distance = d[i];
+            vf = boost::vertices(g).first;
+            std::advance(vf, i);
+            occ = get(&VertexProperty::queue, g, *vf).size();
         }
-        Iter_Vertex ivf = boost::vertices(g).first;
-        std::advance(ivf, i);
-        Vertex vf = *ivf;
-
-        int index_f = map_indices[vf];
-        Vertex pred = vf;
+        
+        int index_f = map_indices[*vf];
+        Vertex pred = *vf;
         std::vector<Vertex> res;
         res.push_back(pred);
         while (pred != vi)
@@ -108,7 +111,7 @@ namespace boost
         }
         std::reverse(res.begin(), res.end());
 
-        return std::make_tuple(vf, res, distance);
+        return std::make_tuple(*vf, res, distance);
     };
 }
 

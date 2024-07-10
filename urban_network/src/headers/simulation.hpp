@@ -6,7 +6,7 @@
 #include "flow.hpp"
 #include "debugger.hpp"
 
-#if DEBUG_MODE
+#if _DEBUG
 #define DEBUG(x) DEBUG(x)
 #else
 #define DEBUG(x)
@@ -52,6 +52,7 @@ public:
 
     Simulation(int N)
     {
+        srand(time(NULL));
         m_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(display_height, display_height), "Simulation");
         DEBUG("Starting simulation construction...");
         init();
@@ -70,6 +71,19 @@ public:
                   << "\x1b[0m";
         std::cout << "\x1b[31m" << "################################################################" << "\x1b[0m" << std::endl;
 #endif
+
+        std::unique_ptr<sf::RenderWindow> clock = std::make_unique<sf::RenderWindow>(sf::VideoMode(0.4 * display_height, 0.16 * display_height), "Simulation", sf::Style::Resize);
+        sf::Font font;
+        if (!font.loadFromFile("fig/font.ttf")) {
+            return; // Gestisce l'errore se il font non viene caricato
+        }
+        sf::Text text;
+        text.setFont(font);
+        text.setCharacterSize(20);
+        text.setFillColor(sf::Color::Black);
+        text.setPosition(0.05 * display_height, 0.035 * display_height);
+        
+        
         while (m_window->isOpen() && m_time < ti)
         {
             // event handler
@@ -84,10 +98,7 @@ public:
                     case sf::Event::KeyPressed:
                         if (event.key.code == sf::Keyboard::P) {
                             // Handle the 'P' key press
-#if COLOR_DUAL
                             print_dual_paint(m_dual);
-
-#endif
                         }
                         break;
 
@@ -95,34 +106,37 @@ public:
                         break;
                         }
             }
-
+            clock->clear(sf::Color::White);
             m_window->clear(sf::Color::White);
 
-            boost::increase_perm_time(m_dual);
             // for every delta t, update agents position based on dijkstra shortest path
             std::for_each(boost::vertices(m_dual).first, boost::vertices(m_dual).second, [&](Vertex v)
                           { boost::flow(v, m_dual, FLOW_RATE); });
             std::for_each(boost::vertices(m_dual).first, boost::vertices(m_dual).second, [&](Vertex v)
+                { update_weights(m_dual); });
+            std::for_each(boost::vertices(m_dual).first, boost::vertices(m_dual).second, [&](Vertex v)
                           { boost::erase_agents(v, m_dual, m_conv_map); });
 #ifdef _DEBUG
-            {
-                std::for_each(boost::vertices(m_dual).first, boost::vertices(m_dual).second, [&](Vertex v)
+            std::for_each(boost::vertices(m_dual).first, boost::vertices(m_dual).second, [&](Vertex v)
                               { boost::print_info(v, m_graph, m_dual, m_time, m_conv_map); });
-            }
-            std::cout << std::endl
-                << std::endl;
 #endif
             boost::render_graph(*m_window, m_graph, m_dual, m_conv_map, std::sqrt(N_NODES), true);
-            // boost::thermal_shake(m_dual);
-            //  draw them
-            // boost::render_graph(m_window, m_graph, m_dual, m_conv_map, std::sqrt(N_NODES), true);
+
 
             // parsing p_ij
             boost::reactivate_flag(m_dual);
+            set_flag_vertices(m_dual);
+
+
 
             m_time++;
             m_window->display();
+            std::string s = "t = " + std::to_string(m_time) + "\n N. agents: " + std::to_string(d_check_sum(m_dual));
+            text.setString(s);
+            clock->draw(text);
+            clock->display();
             sf::sleep(sf::milliseconds(TIME_TO_SLEEP));
+
         }
     }
 
@@ -136,7 +150,7 @@ public:
 
     void printWeights()
     {
-        boost::print_weight_map(m_graph);
+        boost::print_weight_map(m_dual);
     }
 };
 

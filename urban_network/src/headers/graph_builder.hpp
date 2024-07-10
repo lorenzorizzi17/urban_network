@@ -1,3 +1,7 @@
+#ifndef GRAPH_BUILDER
+#define GRAPH_BUILDER
+
+
 #include <iostream>
 #include <fstream>
 #include"randomize.hpp"
@@ -5,6 +9,7 @@
 #include "create_data.hpp"
 #include "dual_graph.hpp"
 #include "alias.hpp"
+#include "update_weights.hpp"
 #include <cstdlib>
 #include <boost/property_map/dynamic_property_map.hpp>
 #include <libs/graph/src/read_graphviz_new.cpp>
@@ -13,7 +18,6 @@
 #include <boost/property_tree/info_parser.hpp>
 
 Graph build_graph(int const N){
-    srand(time(NULL));
 
     // creating manhattan data
     boost::create_manhattan_data(std::sqrt(N));
@@ -39,7 +43,8 @@ Graph build_graph(int const N){
         get(&EdgeProperty::index,g,*it) = c;
     }
     // randomize edges weight
-    boost::randomize_weight_map_uniform(g, 5, 7); // as for now, uniform distribution. Maybe gaussian?
+    boost::randomize_weight_map_uniform(g, ROAD_WEIGHT-1, ROAD_WEIGHT+1); // as for now, uniform distribution. Maybe gaussian?
+    set_weights(g);
     // boost::print_weight_map<Graph, Iter_Edge>(g);
     return g;
 }
@@ -50,7 +55,7 @@ void load_graph_dual(const std::string& filename, Graph& dual, Graph& graph, std
 
     boost::dynamic_properties dp(boost::ignore_other_properties);
     auto index_map = get(&VertexProperty::index, dual);
-    auto weight_map = get(boost::edge_weight, dual);
+    auto weight_map = get(&EdgeProperty::initial_weight, dual);
 
     dp.property("label", index_map);
     dp.property("weight", weight_map);
@@ -65,6 +70,8 @@ void load_graph_dual(const std::string& filename, Graph& dual, Graph& graph, std
             return (get(&EdgeProperty::index, graph, e) == index);});
        dual_map[*it] = *edg;
     }
+
+    set_weights(dual);
 }
 
 void load_graph(const std::string& filename, Graph& graph) {
@@ -74,7 +81,7 @@ void load_graph(const std::string& filename, Graph& graph) {
     
     auto index_map_vert = get(&VertexProperty::index, graph);
     auto index_map_edge = get(&EdgeProperty::index, graph);
-    auto weight_map = get(boost::edge_weight, graph);
+    auto weight_map = get(&EdgeProperty::initial_weight, graph);
     dp.property("label", index_map_vert);
     dp.property("label_edge", index_map_edge);
     dp.property("weight", weight_map);
@@ -83,16 +90,18 @@ void load_graph(const std::string& filename, Graph& graph) {
         std::cerr << "Error reading graphviz file: " << filename << std::endl;
     }
 
+    set_weights(graph);
+
 }
 
 void print_graph(Graph const& g, Graph const& dual, std::map<Vertex, Edge> const& dual_map){
     std::ofstream file("fig/graph.dot");
     auto edge_writer = [&](std::ostream& out, const Edge e) {
-        out << "[weight=\"" << boost::get(boost::edge_weight, g, e) << "\", label_edge= \"" << boost::get(&EdgeProperty::index, g, e) << "\"]";
+        out << "[weight=\"" << boost::get(&EdgeProperty::initial_weight, g, e) << "\", label_edge= \"" << boost::get(&EdgeProperty::index, g, e) << "\"]";
     };
 
     auto edge_writer_dual = [&](std::ostream& out, const Edge e) {
-        out << "[weight=\"" << boost::get(boost::edge_weight, dual, e) << "\"]";
+        out << "[weight=\"" << boost::get(&EdgeProperty::initial_weight, dual, e) << "\"]";
     };
 
     auto vertex_writer = [&](std::ostream& out, const auto& v) {
@@ -154,3 +163,6 @@ void print_dual_paint(Graph const& dual) {
    
     
 }
+
+
+#endif
