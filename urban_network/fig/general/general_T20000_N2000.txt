@@ -3,3 +3,4 @@ T: 0 P: 3 FF: 22
 T: 0 P: 8 FF: 92
 //nuovi senza max_spawnable
 T: 12 P: 0 FF: 88
+T: 11 P: 0 FF: 89

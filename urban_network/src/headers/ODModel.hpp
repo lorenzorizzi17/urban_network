@@ -73,6 +73,10 @@ namespace od {
             init();
             DEBUG("Creating agents...");
             add_agents(m_dual, N, m_conv_map);
+            auto it = std::find_if(boost::vertices(m_dual).first, boost::vertices(m_dual).second, [&](Vertex v) {return m_dual[v].queue.size() > MAX_CAP; });
+            if (it != boost::vertices(m_dual).second) {
+                std::cout << "!";
+            }
             DEBUG("Agents have been correctly created");
             DEBUG("Creating windows...");
             #if ENABLE_GRAPHICS

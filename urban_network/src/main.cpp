@@ -10,7 +10,7 @@
 #define N_DIAGONAL_ROADS 10
 #define N_REMOVED_ROADS 10
 //dynamical parameter
-#define N_AGENTS 1400
+#define N_AGENTS 3000
 #define MAX_SPAWNABLE 15
 #define MIN_DIST_DIJKSTRA 5
 #define MAX_CAP 15  //CAPIENZA MAX = 5400
@@ -22,6 +22,11 @@
 #include"./headers/ODModel.hpp"
 int main()
 {
-    od::ODModel od(N_AGENTS);
-    od.run_graphics(TIME_MAX_SIMULATION);
+    try {
+        od::ODModel od(N_AGENTS);
+        od.run_graphics(TIME_MAX_SIMULATION);
+    }
+    catch (gridlock_exception& e) {
+        e.process();
+    }
 }

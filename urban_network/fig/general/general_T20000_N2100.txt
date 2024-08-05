@@ -1,2 +1,5 @@
-T: 0 P: 13 FF: 87
-//nuovi senza max_spawnable e pesi giusti
+T: 19 P: 0 FF: 81
+T: 6 P: 0 FF: 9
+T: 5 P: 0 FF: 10
+T: 2 P: 0 FF: 13
+T: 17 P: 0 FF: 83

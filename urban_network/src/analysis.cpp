@@ -23,7 +23,7 @@
 
 int main()
 {
-    for (int N_AGENTS = 2000; N_AGENTS < 2300; N_AGENTS += 100) {
+    for (int N_AGENTS = 2300; N_AGENTS < 2401; N_AGENTS += 100) {
         int total_gridlocks = 0;
         int partial_gridlocks = 0;
         int free_flows = 0;
@@ -63,10 +63,9 @@ int main()
                 partial_gridlocks++;
                 std::cout << "pp";
             }
-            
+            std::cout << std::endl;
         }
-        std::cout << std::endl;
-
+       
         //closing file
         file_gridlock_extension.close();
         file_partial_gridlock.close();

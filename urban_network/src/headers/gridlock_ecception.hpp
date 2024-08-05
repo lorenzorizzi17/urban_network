@@ -1,7 +1,6 @@
 #include <iostream>
 #include <exception>
 #include <string>
-
 #include "alias.hpp"
 
 // Classe di eccezione personalizzata
@@ -29,7 +28,7 @@ public:
     }
 
     void process() {
-        std::unique_ptr<sf::RenderWindow> gridlock_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(50, 50), "Collapsed to gridlock!");
+        std::unique_ptr<sf::RenderWindow> gridlock_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(100, 100), "Collapsed to gridlock!");
         gridlock_window->setFramerateLimit(60);
         sf::Font font;
         if (!font.loadFromFile("fig/font.ttf")) {
@@ -52,7 +51,7 @@ public:
                   break;
                 }
             }
-            gridlock_window->clear();
+            gridlock_window->clear(sf::Color::Transparent);
             //disegna
             std::string s = "The system has reached a total gridlock!";
             text.setString(s);
