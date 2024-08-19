@@ -50,7 +50,10 @@ namespace od
                 boost::get(&VertexProperty::queue, g_dual, (*it)->get_vertex()).push_back(std::move((*it)));
                 it = queue.erase(it);
                 c++;
+
+                #if PROCESS_STATS
                 stat.update_flux();
+                #endif
             }
             else {
                     it++;
@@ -65,7 +68,9 @@ namespace od
         auto it = std::find_if(queue.begin(), queue.end(), [](std::shared_ptr<Agent>& a_ptr)
             { return a_ptr->arrived(); });
         while (it != queue.end()) {
+            #if PROCESS_STATS
             s.update_lifespan((*it)->m_total_time);
+            #endif
             queue.erase(it);
             add_agents(g_dual, 1, map);
             it = std::find_if(queue.begin(), queue.end(), [](std::shared_ptr<Agent>& a_ptr)

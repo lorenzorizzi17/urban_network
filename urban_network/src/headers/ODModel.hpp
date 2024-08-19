@@ -11,7 +11,8 @@
 #include "graphics.hpp"
 #include "printers.hpp"
 #include "stall.hpp"
-#include"stats.hpp"
+#include "stats.hpp"
+
 
 #if _DEBUG
 #define DEBUG(x) DEBUG(x)
@@ -63,11 +64,14 @@ namespace od {
             m_parser = make_parser(m_dual);
             DEBUG("Parser graph correctly built.");
             
+            
+            
+
         }
 
     public:
 
-        ODModel(int N) : m_stats({ 10, 14,16,23,208,209,252,278,335,0 }, N)
+        ODModel(int N) : m_stats({10,330,262,205,158,209,252,187,355,0}, N)
         {
             DEBUG("Starting simulation construction...");
             init();
@@ -131,8 +135,9 @@ namespace od {
                 std::for_each(boost::vertices(m_dual).first, boost::vertices(m_dual).second, [&](Vertex v)
                     { erase_agents(v, m_dual, m_conv_map, m_stats); });
 
-
+                #if PROCESS_STATS
                 m_stats.update(m_dual);
+                #endif
 
                 #ifdef _DEBUG
                 DEBUG("#### time t = " + std::to_string(m_time));
@@ -210,10 +215,9 @@ namespace od {
 
 
         void save(int run) {
-#if PROCESS_STATS == true
-            m_stats.save(run);
-#endif
-            
+            #if PROCESS_STATS == true
+            m_stats.save(m_dual);
+            #endif
         }
 
         void set_flags() {

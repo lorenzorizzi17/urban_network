@@ -6,7 +6,8 @@
 #include<string>
 #include<numeric>
 #include<cmath>
-
+#include <boost/graph/betweenness_centrality.hpp>
+#include <boost/graph/graph_utility.hpp>
 
 double mean(std::vector<int> v) {
     return double(std::accumulate(v.begin(), v.end(), 0)) / double((v.size()));
@@ -31,7 +32,7 @@ class Statistics {
 private:
     std::vector<int> m_flux;
     std::vector<int> m_lifespan;
-    std::vector<int> m_occ_matrix[10];
+    std::vector<int> m_occ_matrix[360];
 
     std::vector<int> m_index;
     int m_N;
@@ -53,7 +54,7 @@ public:
 
     void update(Graph& g) {
         m_flux.push_back(m_inst_flux);
-        for (int i = 0; i < m_index.size();i++) {
+        for (int i = 0; i < m_index.size();i++) { 
             auto it = std::find_if(boost::vertices(g).first, boost::vertices(g).second, [&](Vertex v) {return g[v].index == m_index[i]; });
             m_occ_matrix[i].push_back(g[*it].queue.size());
         }
@@ -63,11 +64,11 @@ public:
         m_lifespan.push_back(a+1);
     }
 
-    void save(int run) {
-        //occupation vs time
+    void save(Graph& m_dual) {
+       
         std::ofstream file[10];
         for (int i = 0; i < 10; i++) {
-            file[i].open("fig/occupation_vs_time/OD_T" + std::to_string(TIME_MAX_SIMULATION) + "_N" + std::to_string(m_N) + "_ix" + std::to_string(m_index[i]) + "_run" + std::to_string(run) + ".txt");
+            file[i].open("fig/occupation_vs_time/OD_T" + std::to_string(TIME_MAX_SIMULATION) + "_N" + std::to_string(m_N) + "_ix" + std::to_string(m_index[i]) + ".txt",std::ios::app);
             for (int j = 0; j < m_occ_matrix[i].size(); j++) {
                 file[i] << j << " " << m_occ_matrix[i][j] << std::endl;
             }
@@ -75,7 +76,7 @@ public:
         }
 
         std::ofstream file_flux;
-        file_flux.open("fig/flux/OD_T" + std::to_string(TIME_MAX_SIMULATION) + "_N" + std::to_string(m_N) + "_run" + std::to_string(run)+".txt");
+        file_flux.open("fig/flux/OD_T" + std::to_string(TIME_MAX_SIMULATION) + "_N" + std::to_string(m_N) + ".txt", std::ios::app);
         for (int t = 0; t < m_flux.size(); t++) {
             file_flux << t << " " << m_flux[t] << std::endl;
         }
@@ -84,7 +85,7 @@ public:
         std::cout << mean(m_flux) << " +/- " << sd(m_flux) << std::endl;
 
         std::ofstream file_lifespan;
-        file_lifespan.open("fig/lifespan/OD_T" + std::to_string(TIME_MAX_SIMULATION) + "_N" + std::to_string(m_N) + "_run" + std::to_string(run) + ".txt");
+        file_lifespan.open("fig/lifespan/OD_T" + std::to_string(TIME_MAX_SIMULATION) + "_N" + std::to_string(m_N) + ".txt", std::ios::app);
         for (int t : m_lifespan) {
             file_lifespan << t << std::endl;
         }

@@ -62,9 +62,9 @@ namespace rw {
         }
 
         ~RWModel() {
-#if PARSE_MODE
+            #if PARSE_MODE
             print_mean_congestion(m_dual, m_time);
-#endif
+            #endif
             std::cout << mean(m_flux) << " +/- " << sd(m_flux);
         }
 

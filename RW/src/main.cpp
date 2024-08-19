@@ -1,5 +1,5 @@
 #define GRAPHICS true
-#define PARSE_MODE true
+#define PARSE_MODE false
 #define N_NODES 100
 #define PERCOLATION_THRESHOLD 20
 //dynamical parameter

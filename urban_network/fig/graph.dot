@@ -99,7 +99,7 @@ digraph G {
 97[label="97"];
 98[label="98"];
 99[label="99"];
-0->1 [weight="0.98449", label_edge= "0"];
+0->1 [weight="0.98449", label_edge= "0", color = red];
 0->10 [weight="1.12945", label_edge= "1"];
 1->0 [weight="0.98449", label_edge= "2"];
 1->11 [weight="1.16450", label_edge= "3"];
@@ -109,7 +109,7 @@ digraph G {
 2->3 [weight="0.90303", label_edge= "7"];
 3->2 [weight="0.90303", label_edge= "8"];
 3->13 [weight="1.15358", label_edge= "9"];
-3->4 [weight="0.96644", label_edge= "10"];
+3->4 [weight="0.96644", label_edge= "10", color = red];
 4->3 [weight="0.96644", label_edge= "11"];
 4->14 [weight="0.85049", label_edge= "12"];
 4->5 [weight="1.06523", label_edge= "13"];
@@ -304,7 +304,7 @@ digraph G {
 58->59 [weight="1.13518", label_edge= "202"];
 58->48 [weight="0.92611", label_edge= "203"];
 59->58 [weight="1.13518", label_edge= "204"];
-59->49 [weight="0.87052", label_edge= "205"];
+59->49 [weight="0.87052", label_edge= "205", color = red];
 59->69 [weight="1.03178", label_edge= "206"];
 60->61 [weight="0.89958", label_edge= "207"];
 60->50 [weight="0.97192", label_edge= "208"];
@@ -351,7 +351,7 @@ digraph G {
 72->82 [weight="0.87587", label_edge= "249"];
 72->73 [weight="1.02623", label_edge= "250"];
 72->62 [weight="0.90204", label_edge= "251"];
-73->72 [weight="1.02623", label_edge= "252"];
+73->72 [weight="1.02623", label_edge= "252", color = red];
 73->83 [weight="0.91422", label_edge= "253"];
 73->74 [weight="0.83262", label_edge= "254"];
 73->63 [weight="1.12870", label_edge= "255"];
@@ -361,7 +361,7 @@ digraph G {
 74->64 [weight="0.83960", label_edge= "259"];
 75->74 [weight="0.86102", label_edge= "260"];
 75->85 [weight="0.80253", label_edge= "261"];
-75->76 [weight="1.03323", label_edge= "262"];
+75->76 [weight="1.03323", label_edge= "262", color = red];
 75->65 [weight="0.93335", label_edge= "263"];
 76->75 [weight="1.03323", label_edge= "264"];
 76->86 [weight="0.97665", label_edge= "265"];
@@ -454,7 +454,7 @@ digraph G {
 72->61 [weight="0.83782", label_edge= "352"];
 61->72 [weight="0.83782", label_edge= "353"];
 43->52 [weight="1.16319", label_edge= "354"];
-52->43 [weight="1.16319", label_edge= "355"];
+52->43 [weight="1.16319", label_edge= "355", color = "red"];
 52->61 [weight="0.83225", label_edge= "356"];
 61->52 [weight="0.83225", label_edge= "357"];
 72->81 [weight="1.14054", label_edge= "358"];
