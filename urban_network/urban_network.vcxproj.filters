@@ -33,7 +33,7 @@
     <ClInclude Include="src\headers\dual_graph.hpp">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="src\headers\flow.hpp">
+    <ClInclude Include="src\headers\dynamics.hpp">
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="src\headers\graph_builder.hpp">
@@ -60,7 +60,7 @@
     <ClInclude Include="src\headers\printers.hpp">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="src\headers\stall.hpp">
+    <ClInclude Include="src\headers\gridlock.hpp">
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="src\headers\stats.hpp">
@@ -89,7 +89,7 @@
     <Font Include="fig\font.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\analysis.cpp">
+    <ClCompile Include="src\main.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
   </ItemGroup>

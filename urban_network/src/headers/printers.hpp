@@ -52,8 +52,8 @@ void print_percolation_graph(Graph const& dual, int t) {
 }
 */
 
-void build_parser(Parser const& p) {
-    std::ofstream file("fig/parser.dot");
+void build_parser(Parser const& p, int N) {
+    std::ofstream file("fig/parser/parser_N"+ std::to_string(N)+".dot");
     auto edge_writer = [&](std::ostream& out, const Edge e) {
         PVertex v = boost::source(e, p);
         double prob = double(boost::get(boost::edge_weight, p, e)) / double(p[v].pass);

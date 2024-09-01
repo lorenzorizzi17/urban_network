@@ -141,27 +141,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="fig\comp.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="fig\graph.dot" />
-    <None Include="fig\graph_mean_congestion.dot" />
-    <None Include="fig\parser.dot" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="fig\graph_mean_congestion.png" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\headers\agents.hpp" />
     <ClInclude Include="src\headers\alias.hpp" />
+    <ClInclude Include="src\headers\cluster.hpp" />
     <ClInclude Include="src\headers\flow.hpp" />
     <ClInclude Include="src\headers\graph_builder.hpp" />
+    <ClInclude Include="src\headers\percolation.hpp" />
     <ClInclude Include="src\headers\printers.hpp" />
     <ClInclude Include="src\headers\renderer.hpp" />
     <ClInclude Include="src\headers\RWModel.hpp" />
+    <ClInclude Include="src\headers\stats.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

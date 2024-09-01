@@ -1,9 +1,9 @@
 #define LOAD_GRAPH true
-#define PARSING_MODE false
+#define PARSING_MODE true
 #define DRAW_CONGESTED false
 #define ENABLE_GRAPHICS false
 #define PERCOLATION_THRESHOLD 7
-#define PROCESS_STATS true
+#define PROCESS_STATS false
 
 //when building
 #define N_NODES 100
@@ -17,7 +17,7 @@
 #define MAX_CAP 15  //CAPIENZA MAX = 5400
 #define FLOW_RATE 3 
 #define TIME_TO_SLEEP 0 //in ms
-#define TIME_MAX_SIMULATION 10000
+#define TIME_MAX_SIMULATION 50000
 
 //user-defined library to run the sim
 #include"./headers/ODModel.hpp"
@@ -25,7 +25,7 @@
 
 int main()
 {
-    for (int N_AGENTS = 850; N_AGENTS < 1951; N_AGENTS += 100) {
+    for (int N_AGENTS = 600; N_AGENTS < 701; N_AGENTS += 100) {
         int total_gridlocks = 0;
         int partial_gridlocks = 0;
         int free_flows = 0;
@@ -42,10 +42,10 @@ int main()
         std::ofstream file_partial_gridlock;
         file_partial_gridlock.open("fig/congested_cluster_size/partialOD_T" + std::to_string(TIME_MAX_SIMULATION) + "_N" + std::to_string(N_AGENTS) + ".txt", std::ios::app);
 
-        int const REP = 3;
+        int const REP = 1;
         for (int i = 0; i < REP; i++) {
             od::ODModel od(N_AGENTS);
-            std::cout << i << " ";
+            std::cout << "N = " << N_AGENTS << ", rep " << i << " ";
             try {
                 od.run(TIME_MAX_SIMULATION);
                 od.save(i);

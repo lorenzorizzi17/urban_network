@@ -2,10 +2,11 @@
 #define GPAPHICS
 
 #include<SFML/Graphics.hpp>
-#include"stall.hpp"
+#include"gridlock.hpp"
 #include"graph_builder.hpp"
 
 namespace od {
+
     void set_stats_text(int display_height, int t, Graph const& dual, std::unique_ptr<sf::RenderWindow>& stats_window) {
         sf::Font font;
         if (!font.loadFromFile("fig/font.ttf")) {
@@ -30,12 +31,6 @@ namespace od {
             switch (event.type) {
             case sf::Event::Closed:
                 m_main_window->close();
-                break;
-
-            case sf::Event::KeyPressed:
-                if (event.key.code == sf::Keyboard::P) {
-                    print_dual_paint(dual);
-                }
                 break;
             default:
                 break;

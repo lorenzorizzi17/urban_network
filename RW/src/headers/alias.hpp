@@ -23,6 +23,8 @@ struct VertexProperty {
     int index;
     bool full = false;
     int congestion_time = 0;
+    int congested_time = 0;
+    bool occupied = false;
 };
 
 struct EdgeProperty {

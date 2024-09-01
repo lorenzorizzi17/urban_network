@@ -44,6 +44,13 @@ public:
         m_N = N;
     }
 
+    Statistics(int N, int n) {
+        m_N = N;
+        for (int i = 0; i < n; i++) {
+            m_index.push_back(i);
+        }
+    }
+
     void update_flux() {
         m_inst_flux++;
     }
@@ -66,13 +73,13 @@ public:
 
     void save(Graph& m_dual) {
        
-        std::ofstream file[10];
-        for (int i = 0; i < 10; i++) {
-            file[i].open("fig/occupation_vs_time/OD_T" + std::to_string(TIME_MAX_SIMULATION) + "_N" + std::to_string(m_N) + "_ix" + std::to_string(m_index[i]) + ".txt",std::ios::app);
+        for (int i = 0; i < m_index.size(); i++) {
+            std::ofstream file;
+            file.open("fig/occupation_vs_time/OD_T" + std::to_string(TIME_MAX_SIMULATION) + "_N" + std::to_string(m_N) + "_ix" + std::to_string(m_index[i]) + ".txt");
             for (int j = 0; j < m_occ_matrix[i].size(); j++) {
-                file[i] << j << " " << m_occ_matrix[i][j] << std::endl;
+                file << j << " " << m_occ_matrix[i][j] << std::endl;
             }
-            file[i].close();
+            file.close();
         }
 
         std::ofstream file_flux;

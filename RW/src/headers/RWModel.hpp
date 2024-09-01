@@ -29,30 +29,35 @@ namespace rw {
         Graph m_dual;
         std::map<Vertex, Edge> m_conv_map;
 
+        Statistics m_stats;
+
         int m_time = 0;
         std::vector<int> m_flux;
+        int m_N;
+		double m_perc = 0.0;
     private:
-        void init()
+        void init(int n)
         {
             DEBUG("Loading graph...");
             load_graph("fig/graph.dot", m_graph);
             DEBUG("Direct graph has been successfully loaded into memory");
             DEBUG("Loading dual graph...");
-            load_dual("fig/parser.dot", m_dual);
+            load_dual("fig/parser/parser_N2000.dot", m_dual); //load_dual("fig/parser/parser_N"+std::to_string(n) + ".dot", m_dual);
             DEBUG("Dual graph has been successfully loaded into memory");
         }
 
     public:
 
-        RWModel(int n)
+		RWModel(int n, double perc) : m_stats(n,0)//m_stats({ 10,330,262,205,158,209,252,187,355,0 }, n)
         {
-            srand(time(NULL));
             DEBUG("Starting simulation construction...");
-            init();
+            init(n);
             DEBUG("Creating agents...");
-            add_agents(m_dual, N_AGENTS);
+            add_agents(m_dual, n);
             DEBUG("Agents have been correctly created");
             DEBUG("Creating windows...");
+            m_N = n;
+			m_perc = perc;
             m_main_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(display_height, display_height), "Simulation");
             m_stats_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(0.4 * display_height, 0.16 * display_height), "Stats", sf::Style::Resize);
             m_main_window->setFramerateLimit(60);
@@ -63,16 +68,14 @@ namespace rw {
 
         ~RWModel() {
             #if PARSE_MODE
-            print_mean_congestion(m_dual, m_time);
+            print_mean_congestion(m_dual, m_time, m_N, m_perc);
             #endif
-            std::cout << mean(m_flux) << " +/- " << sd(m_flux);
         }
 
         
 
         void run(int time_max)
         {
-            std::ofstream o;o.open("fig/test.txt");
             while (m_main_window->isOpen() && m_time < time_max)
             {
                 // event handler
@@ -91,13 +94,13 @@ namespace rw {
                 m_stats_window->clear(sf::Color::White);
                 m_main_window->clear(sf::Color::White);
 
+                //setup statistics panel
+                m_stats.clear();
+
                 // DYNAMICAL RULE
-                int flux = 0;
-                std::for_each(boost::vertices(m_dual).first, boost::vertices(m_dual).second, [&](Vertex v)
-                    { flow(v, m_dual, FLOW_RATE, flux);  });
-                m_flux.push_back(flux);
+                BGL_FORALL_VERTICES(v, m_dual, Graph) { flow(v, m_dual, FLOW_RATE, m_stats);}
              
-                
+         
 
                 //draws the outcome
                 #if GRAPHICS
@@ -107,9 +110,9 @@ namespace rw {
                 //set flag (congested nodes)
                 this->set_flags();
                 
-
+                m_stats.update(m_dual);
                 
-                update_queue_size(o, m_dual,m_time, 1);
+                //update_queue_size(o, m_dual,m_time, 1);
 
                 //display stuff
                 m_time++;
@@ -120,6 +123,11 @@ namespace rw {
 
                 sf::sleep(sf::milliseconds(TIME_TO_SLEEP));
 
+				//if TIME_MAX_SIMULATION divided by m_time is a multiple of 10, print the mean congestion
+				if (m_time%(100) == 0) {
+                    std::cout << m_time / 100 << " " ;
+                }
+
             }
         }
 
@@ -128,11 +136,11 @@ namespace rw {
             reactivate_flag(m_dual);
             //set nodes as congestionated 
             set_flag_vertices(m_dual);
-
-
-            sf::sleep(sf::milliseconds(TIME_TO_SLEEP));
         }
 
+        void save(int run) {
+            m_stats.save(m_dual);
+        }
 
         
 

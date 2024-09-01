@@ -7,8 +7,7 @@ void update_queue_size(std::ofstream& file, Graph& g, int time, int ix) {
         if (it == boost::vertices(g).second) { throw std::runtime_error{ "Error" }; };
         double partial_mean = double(g[*it].congestion_time) / double(time);
         file << partial_mean;
- 
-    file << std::endl;
+        file << std::endl;
 }
 
 void update_queue_size(std::ofstream& file, Graph& g, int time) {

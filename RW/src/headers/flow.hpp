@@ -2,6 +2,7 @@
 
 #include"alias.hpp"
 #include"agents.hpp"
+#include"stats.hpp"
 
 
 namespace rw {
@@ -25,21 +26,26 @@ namespace rw {
         for (auto it = boost::vertices(g).first; it != boost::vertices(g).second; it++) {
             if (get(&VertexProperty::queue, g, *it).size() >= MAX_CAP) {
                 get(&VertexProperty::full, g, *it) = true;
-                
+                get(&VertexProperty::congested_time, g,*it) += 1;
             }
             else {
                 get(&VertexProperty::full, g, *it) = false;
             }
-
             get(&VertexProperty::congestion_time, g, *it) += get(&VertexProperty::queue, g, *it).size();
         }
     }
 
     std::pair<Vertex, bool> process_agent(Vertex v, Graph& g) {
-        double rn = double(std::rand()) / double(RAND_MAX);
+        // Definizione del generatore di numeri casuali
+        static std::random_device rd; // Fonte di entropia
+        static std::mt19937 gen(rd()); // Generatore di numeri casuali
+        std::uniform_real_distribution<> dis(0.0, 1.0); // Distribuzione tra 0 e 1
+
+        double rn = dis(gen); // Genera un numero casuale tra 0 e 1
         double cum_p = 0;
+
         for (auto it2 = boost::out_edges(v, g).first; it2 != boost::out_edges(v, g).second; it2++) {
-            cum_p = cum_p + get(&EdgeProperty::prob, g, *it2);
+            cum_p += get(&EdgeProperty::prob, g, *it2);
             if (rn < cum_p) {
                 Vertex v_tar = boost::target(*it2, g);
                 if (get(&VertexProperty::full, g, v_tar)) {
@@ -51,23 +57,23 @@ namespace rw {
             }
         }
 
-        //A value of 1 has not been reached. Choose a random road
+        // Se non è stato raggiunto un valore di 1, scegli una strada casuale
         std::cout << "Miss";
-        int rr = std::rand() & (boost::out_degree(v, g)-1);
+        std::uniform_int_distribution<> dis_int(0, boost::out_degree(v, g) - 1); // Distribuzione intera
+        int rr = dis_int(gen);
+
         auto ch = boost::out_edges(v, g).first;
         std::advance(ch, rr);
-            Vertex v_tar = boost::target(*ch, g);
-            if (get(&VertexProperty::full, g, v_tar)) {
-                return std::make_pair(0, false);
-            }
-            else {
-                return std::make_pair(boost::target(*ch, g), true);
-            }
-
-
+        Vertex v_tar = boost::target(*ch, g);
+        if (get(&VertexProperty::full, g, v_tar)) {
+            return std::make_pair(0, false);
+        }
+        else {
+            return std::make_pair(v_tar, true);
+        }
     }
 
-    void flow(Vertex v, Graph& g, int n, int& flux) {
+    void flow(Vertex v, Graph& g, int n, Statistics& s) {
 
             std::list<std::shared_ptr<rw::Agent>>& queue = get(&VertexProperty::queue, g, v);
             if (queue.empty()) {
@@ -88,7 +94,7 @@ namespace rw {
                     boost::get(&VertexProperty::queue, g, new_vertex).push_back(std::move((*it)));
                     it = queue.erase(it);
                     c++;
-                    flux++;
+					s.update_flux();
                 } else {
                     it++;
                 }
@@ -112,27 +118,36 @@ namespace rw {
     }
 
 
-    void print_mean_congestion(Graph const& dual, int t) {
-        std::ofstream file_dual("fig/graph_mean_congestion.dot");
-        auto edge_writer_dual = [&](std::ostream& out, const Edge e) {
-            out << "[weight=\"" << boost::get(boost::edge_weight, dual, e) << "\"]";
-            };
-
-        auto vertex_writer_dual = [&](std::ostream& out, const auto& v) {
-            out << "[label=\"" << boost::get(&VertexProperty::index, dual, v) << "\", fillcolor = \"" << get_perc_color(get(&VertexProperty::congestion_time, dual, v), t * (double(PERCOLATION_THRESHOLD) / double(100))) << "\", style = \"filled\" ]";
-            };
-
-        boost::write_graphviz(file_dual, dual, vertex_writer_dual, edge_writer_dual);
-        file_dual.close();
-        std::system("fdp -Tpng fig/graph_mean_congestion.dot -o fig/graph_mean_congestion.png");
+    void print_mean_congestion(Graph& dual, int t, int N_AGENTS, double perc) {
+        int congested_cntr = 0;
+		std::ofstream file_perc("fig/graph_percolation_N"+std::to_string(N_AGENTS)+"_p"+std::to_string(int(std::round(perc*100))) + ".txt");
 
         //file for detection:
-        std::ofstream file_comparation("fig/comp.txt");
         for (int i = 0; i < boost::num_vertices(dual); i++) {
             auto it = std::find_if(boost::vertices(dual).first, boost::vertices(dual).second, [&](Vertex v) {return dual[v].index == i; });
             if (it == boost::vertices(dual).second) { throw std::runtime_error{ "Error" }; };
-            file_comparation << i << " " << double(dual[*it].congestion_time)/double(   TIME_MAX_SIMULATION) << std::endl;
+            if (double(dual[*it].congestion_time) / double(TIME_MAX_SIMULATION) >= perc) {
+                congested_cntr++;
+                dual[*it].occupied = true;
+            }
+            //file_comparation << i << " " << double(dual[*it].congestion_time) / double(TIME_MAX_SIMULATION) << std::endl;
         }
+
+
+
+
+        auto vertex_writer_dual2 = [&](std::ostream& out, const auto& v) {
+            out << "[label=\"" << boost::get(&VertexProperty::index, dual, v) << "\", occupied = \"" << dual[v].occupied << "\" ]" ;
+        };
+
+        //boost::write_graphviz(file_dual, dual, vertex_writer_dual, edge_writer_dual);
+        //file_dual.close();
+        //std::system("fdp -Tpng fig/graph_mean_congestion.dot -o fig/graph_mean_congestion.png");
+        boost::write_graphviz(file_perc, dual, vertex_writer_dual2, boost::default_writer());
+        //file_dual.close();
+        file_perc.close();
+        
+        
     }
     
 

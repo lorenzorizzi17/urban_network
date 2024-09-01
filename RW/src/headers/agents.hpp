@@ -57,16 +57,25 @@ namespace rw
     };
 
     Iter_Vertex get_random_vertex(Graph const& g) {
-        Iter_Vertex vi = boost::vertices(g).first;
+        static std::random_device rd;  // Seed del generatore
+        static std::mt19937 gen(rd()); // Generatore Mersenne Twister
+        std::uniform_int_distribution<> dis; // Distribuzione uniforme
+
+        Iter_Vertex vi, vi_end;
+        std::tie(vi, vi_end) = boost::vertices(g);
         int num_e = boost::num_vertices(g);
-        std::advance(vi, std::rand() % num_e);
-        //strip down from here
-        while (get(&VertexProperty::queue, g, *vi).size() >= MAX_CAP) {
-            vi = boost::vertices(g).first;
-            int num_e = boost::num_vertices(g);
-            std::advance(vi, std::rand() % num_e);
+        dis.param(std::uniform_int_distribution<>::param_type(0, num_e - 1));
+
+        int c = 0;
+        while (c < 1000) {
+            Iter_Vertex vi = boost::vertices(g).first;
+            std::advance(vi, dis(gen));
+            if (get(&VertexProperty::queue, g, *vi).size() < MAX_SPAWNABLE) {
+                return vi;
+            }
+            c++;
         }
-        return vi;
+        throw std::runtime_error("Unable to locate new agents");
     }
 
 
@@ -82,7 +91,6 @@ namespace rw
     void add_agent(Graph& g_dual, Vertex v)
     {
             boost::get(&VertexProperty::queue, g_dual, v).push_back(std::make_shared<Agent>(g_dual, v));
-  
     }
 
     

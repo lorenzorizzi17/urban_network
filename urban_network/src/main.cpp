@@ -1,7 +1,5 @@
 #define LOAD_GRAPH true
 #define PARSING_MODE false
-#define DRAW_CONGESTED false
-#define PERCOLATION_THRESHOLD 7
 #define ENABLE_GRAPHICS false
 #define PROCESS_STATS false
 //when building
@@ -20,6 +18,7 @@
 
 //user-defined library to run the sim
 #include"./headers/ODModel.hpp"
+
 int main()
 {
     try {

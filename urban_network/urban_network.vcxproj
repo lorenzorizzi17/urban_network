@@ -162,7 +162,7 @@
     <ClInclude Include="src\headers\debugger.hpp" />
     <ClInclude Include="src\headers\dijkstra.hpp" />
     <ClInclude Include="src\headers\dual_graph.hpp" />
-    <ClInclude Include="src\headers\flow.hpp" />
+    <ClInclude Include="src\headers\dynamics.hpp" />
     <ClInclude Include="src\headers\graph_builder.hpp" />
     <ClInclude Include="src\headers\gridlock_ecception.hpp" />
     <ClInclude Include="src\headers\parser.hpp" />
@@ -171,7 +171,7 @@
     <ClInclude Include="src\headers\renderer.hpp" />
     <ClInclude Include="src\headers\ODModel.hpp" />
     <ClInclude Include="src\headers\graphics.hpp" />
-    <ClInclude Include="src\headers\stall.hpp" />
+    <ClInclude Include="src\headers\gridlock.hpp" />
     <ClInclude Include="src\headers\stats.hpp" />
     <ClInclude Include="src\headers\update_weights.hpp" />
   </ItemGroup>
@@ -190,7 +190,7 @@
     <Font Include="fig\font.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\analysis.cpp" />
+    <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
