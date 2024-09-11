@@ -1,14 +1,18 @@
 #define LOAD_GRAPH true
 #define PARSING_MODE false
-#define ENABLE_GRAPHICS false
+#define ENABLE_GRAPHICS true
 #define PROCESS_STATS false
+
+//drawing directives
+#define LOG_OCCUPATION_VS_TIME true
+#define LOG_OCCUPATION_VS_TIME_NODE 355
 //when building
 #define N_NODES 100
 #define ROAD_WEIGHT 1
 #define N_DIAGONAL_ROADS 10
 #define N_REMOVED_ROADS 10
 //dynamical parameter
-#define N_AGENTS 2000
+#define N_AGENTS 1900
 #define MAX_SPAWNABLE 1500
 #define MIN_DIST_DIJKSTRA 5
 #define MAX_CAP 15  //CAPIENZA MAX = 5400
@@ -23,7 +27,7 @@ int main()
 {
     try {
         od::ODModel od(N_AGENTS);
-        od.run(TIME_MAX_SIMULATION);
+        od.run_graphics(TIME_MAX_SIMULATION);
     }
     catch (gridlock_exception& e) {
         e.process();

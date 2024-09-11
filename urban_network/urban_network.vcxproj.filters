@@ -72,21 +72,20 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="data\manhattan_grid.dat" />
-    <None Include="fig\graph.dot" />
-    <None Include="fig\graph_dual.dot" />
-    <None Include="doc\doc.md" />
-    <None Include="fig\parser.dot" />
+    <None Include="graph\graph.dot" />
+    <None Include="graph\graph_dual.dot" />
+    <None Include="graph\parser.dot" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="fig\graph_dual.png">
+    <Image Include="graph\graph_dual.png">
       <Filter>File di risorse</Filter>
     </Image>
-    <Image Include="fig\graph.png">
+    <Image Include="graph\graph.png">
       <Filter>File di risorse</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Font Include="fig\font.ttf" />
+    <Font Include="graph\font.ttf" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">

@@ -28,6 +28,8 @@ namespace od {
         unsigned const display_height = 0.8 * sf::VideoMode::getDesktopMode().height;
         std::unique_ptr<sf::RenderWindow> m_main_window;
         std::unique_ptr<sf::RenderWindow> m_stats_window;
+		std::unique_ptr<sf::RenderWindow> m_graph_window;
+		std::vector < sf::RectangleShape > m_buffer;
         Graph m_graph;
         Graph m_dual;
         Parser m_parser;
@@ -43,10 +45,10 @@ namespace od {
         {
             #if LOAD_GRAPH == true
             DEBUG("Loading graph...");
-            load_graph("fig/graph.dot", m_graph);
+            load_graph("graph/graph.dot", m_graph);
             DEBUG("Direct graph has been successfully loaded into memory");
             DEBUG("Loading dual graph...");
-            load_graph_dual("fig/graph_dual.dot", m_dual, m_graph, m_conv_map);
+            load_graph_dual("graph/graph_dual.dot", m_dual, m_graph, m_conv_map);
             DEBUG("Dual graph has been successfully loaded into memory");
             #else
             DEBUG("Building graph...");
@@ -89,8 +91,10 @@ namespace od {
             DEBUG("Creating windows...");
             m_main_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(display_height, display_height), "Simulation");
             m_stats_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(0.4 * display_height, 0.16 * display_height), "Stats", sf::Style::Resize);
+			m_graph_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(0.6 * display_height, 0.4 * display_height), "Real-time graph");
             m_main_window->setFramerateLimit(60);
             m_stats_window->setFramerateLimit(60);
+			m_graph_window->setFramerateLimit(60);
             DEBUG("Windows created.");
             #endif
             DEBUG("Simulation is now ready to start");
@@ -113,7 +117,7 @@ namespace od {
 			//display stuff
             #ifdef _DEBUG
             std::cout << "\x1b[31m" << "################################################################" << "\x1b[0m";
-            std::cout << "\x1b[31m" << "\n#                 STARTING SIMULAtiON...                     #\n" << "\x1b[0m";
+            std::cout << "\x1b[31m" << "\n#                 STARTING SIMULATION...                     #\n" << "\x1b[0m";
             std::cout << "\x1b[31m" << "################################################################" << "\x1b[0m" << std::endl;
             #endif
             
@@ -122,10 +126,15 @@ namespace od {
             {
                 //event handler
                 handle_events(m_main_window, m_dual);
+                
+                
 
                 //clear windows
                 m_stats_window->clear(sf::Color::White);
                 m_main_window->clear(sf::Color::White);
+                    
+               
+
 
                 //setup statistics panel
                 m_stats.clear();
@@ -153,9 +162,15 @@ namespace od {
                 }
                
                 //display SFML windows
-                m_main_window->display();
                 set_stats_text(display_height, m_time, m_dual, m_stats_window);
                 m_stats_window->display();
+                m_main_window->display();
+
+                #if LOG_OCCUPATION_VS_TIME
+                m_graph_window->clear(sf::Color(230,230,250));
+                draw_real_time_graph(*m_graph_window, m_dual, m_time, 100, LOG_OCCUPATION_VS_TIME_NODE, m_buffer);
+                m_graph_window->display();
+                #endif
 
                 #if TIME_TO_SLEEP
                 sf::sleep(sf::milliseconds(TIME_TO_SLEEP));

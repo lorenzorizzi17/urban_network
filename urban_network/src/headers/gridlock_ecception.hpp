@@ -31,7 +31,7 @@ public:
         std::unique_ptr<sf::RenderWindow> gridlock_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(100, 100), "Collapsed to gridlock!");
         gridlock_window->setFramerateLimit(60);
         sf::Font font;
-        if (!font.loadFromFile("fig/font.ttf")) {
+        if (!font.loadFromFile("graph/font.ttf")) {
             throw std::runtime_error("Font non caricato"); // Gestisce l'errore se il font non viene caricato
         }
         sf::Text text;
