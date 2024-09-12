@@ -1,11 +1,12 @@
 #define LOAD_GRAPH true
 #define PARSING_MODE false
 #define ENABLE_GRAPHICS true
-#define PROCESS_STATS false
+#define PROCESS_STATS true
 
 //drawing directives
 #define LOG_OCCUPATION_VS_TIME true
-#define LOG_OCCUPATION_VS_TIME_NODE 355
+#define LOG_OCCUPATION_VS_TIME_NODE 1
+#define LOG_HISTO_FLOW true
 //when building
 #define N_NODES 100
 #define ROAD_WEIGHT 1

@@ -29,6 +29,7 @@ namespace od {
         std::unique_ptr<sf::RenderWindow> m_main_window;
         std::unique_ptr<sf::RenderWindow> m_stats_window;
 		std::unique_ptr<sf::RenderWindow> m_graph_window;
+		std::unique_ptr<sf::RenderWindow> m_histo_window;
 		std::vector < sf::RectangleShape > m_buffer;
         Graph m_graph;
         Graph m_dual;
@@ -38,6 +39,7 @@ namespace od {
 
         int m_time = 0;
         int m_N;
+		std::map<int, int> m_histo;
 
 
     private:
@@ -78,7 +80,7 @@ namespace od {
 
     public:
 
-        ODModel(int N) : m_stats(N,0)//m_stats({10,330,262,205,158,209,252,187,355,0}, N)
+        ODModel(int N) : m_stats(N,0) //m_stats({10,330,262,205,158,209,252,187,355,0}, N)
         {
             DEBUG("Starting simulation construction...");
             init();
@@ -92,9 +94,11 @@ namespace od {
             m_main_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(display_height, display_height), "Simulation");
             m_stats_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(0.4 * display_height, 0.16 * display_height), "Stats", sf::Style::Resize);
 			m_graph_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(0.6 * display_height, 0.4 * display_height), "Real-time graph");
+			m_histo_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(0.6 * display_height, 0.4 * display_height), "Flow histogram");
             m_main_window->setFramerateLimit(60);
             m_stats_window->setFramerateLimit(60);
 			m_graph_window->setFramerateLimit(60);
+			m_histo_window->setFramerateLimit(60);
             DEBUG("Windows created.");
             #endif
             DEBUG("Simulation is now ready to start");
@@ -127,14 +131,9 @@ namespace od {
                 //event handler
                 handle_events(m_main_window, m_dual);
                 
-                
-
                 //clear windows
                 m_stats_window->clear(sf::Color::White);
                 m_main_window->clear(sf::Color::White);
-                    
-               
-
 
                 //setup statistics panel
                 m_stats.clear();
@@ -170,6 +169,12 @@ namespace od {
                 m_graph_window->clear(sf::Color(230,230,250));
                 draw_real_time_graph(*m_graph_window, m_dual, m_time, 100, LOG_OCCUPATION_VS_TIME_NODE, m_buffer);
                 m_graph_window->display();
+                #endif
+
+                #if LOG_HISTO_FLOW
+				m_histo_window->clear(sf::Color::White);
+                draw_real_time_histo_flux(*m_histo_window, m_stats,100, m_histo);
+                m_histo_window->display();
                 #endif
 
                 #if TIME_TO_SLEEP

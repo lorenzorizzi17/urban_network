@@ -75,19 +75,7 @@ namespace boost
             w.draw(rectangle);
         }
 
-        // draws the grid
-        for (int cur_index = 0; cur_index != SIDE * SIDE; cur_index++)
-        {
-            int row = cur_index / SIDE;
-            int column = cur_index - row * (SIDE);
-
-            sf::CircleShape unity(R);
-            unity.setPosition(0.015 * display_height + (0.5 + column) * L, 0.015 * display_height + L * (row + 0.5));
-            unity.setOrigin(R / 2, R / 2);
-            int occ = 0;
-            unity.setFillColor(sf::Color::Black);
-            w.draw(unity);
-        }
+        
     }
 
 };

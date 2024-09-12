@@ -30,6 +30,10 @@ public:
         }
     }
 
+	int get_flux() const {
+		return m_inst_flux;
+	}
+
     void update_flux() {
         m_inst_flux++;
     }

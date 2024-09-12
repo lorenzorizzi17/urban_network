@@ -102,8 +102,47 @@ namespace od {
 		y_axis.setFillColor(sf::Color::Black);
 		y_axis.setPosition(horizantal_offset,heightWindow-vertical_offset );
 		m_main_window.draw(y_axis);
+    }
 
-        
+
+    void draw_real_time_histo_flux(sf::RenderWindow& m_main_window, Statistics& s, int bin, std::map<int, int>& histo) {
+		sf::Event event;
+		while (m_main_window.pollEvent(event))
+		{
+			switch (event.type) {
+			case sf::Event::Closed:
+				m_main_window.close();
+				break;
+			default:
+				break;
+			}
+		}
+		int actual_flux = s.get_flux();
+        int phi_min = 600;
+        int phi_max = 800;
+		double bin_lenght = (phi_max - phi_min) / bin;
+        int interval = (phi_max - phi_min);
+		int bin_index = (actual_flux - phi_min) / bin_lenght;
+        std::cout << " bin " << bin_index << " ";
+		histo[bin_index] += 1;
+
+        int integral = 0;
+		for (std::pair<int, int> p : histo) {
+            integral += p.second;
+		}
+        std::cout << integral;
+
+        for (std::pair<int, int> p : histo) {
+			double heigh_norm = double(p.second) / double(integral);
+            double height_rect = heigh_norm * 10000;
+			sf::RectangleShape rectangle(sf::Vector2f(bin_lenght, height_rect));
+			rectangle.setFillColor(sf::Color::Blue);
+			rectangle.setOrigin(bin_lenght / 2., height_rect/ 2.);
+			rectangle.setPosition((p.first+0.5) * bin_lenght, m_main_window.getSize().y - height_rect/2);
+			m_main_window.draw(rectangle);
+        }
+
+
     }
 }
 

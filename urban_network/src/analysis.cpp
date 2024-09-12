@@ -17,7 +17,7 @@
 #define MAX_CAP 15  //CAPIENZA MAX = 5400
 #define FLOW_RATE 3 
 #define TIME_TO_SLEEP 0 //in ms
-#define TIME_MAX_SIMULATION 50000
+#define TIME_MAX_SIMULATION 20000
 
 //user-defined library to run the sim
 #include"./headers/ODModel.hpp"
