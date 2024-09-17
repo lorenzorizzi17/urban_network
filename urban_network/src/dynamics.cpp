@@ -1,7 +1,6 @@
 //this .cpp file contains the implementation of the dynamics of the model (flow, weights, ...)
 #include "headers/alias.hpp"
 #include "headers/agents.hpp"
-#include "headers/parameters.hpp"
 #include "headers/ODModel.hpp"
 
 //loss function
@@ -28,7 +27,7 @@ void ODModel::flow(Vertex v, int flow_rate)
             PVertex old_vertex = *std::find_if(boost::vertices(m_parser).first, boost::vertices(m_parser).second, [&](PVertex v) {return m_dual[(*it)->get_vertex()].index == m_parser[v].index; });
             (*it)->evolve_dijsktra();
 
-            if(PARSING_MODE){
+            if(m_config.PARSING_MODE){
                 PVertex new_vertex = *std::find_if(boost::vertices(m_parser).first, boost::vertices(m_parser).second, [&](PVertex v) {return m_dual[(*it)->get_vertex()].index == m_parser[v].index; });
                 get(boost::edge_weight, m_parser, (boost::edge(old_vertex, new_vertex, m_parser).first)) += 1;
                 get(&ParserProperty::pass, m_parser, old_vertex) += 1;
@@ -38,7 +37,7 @@ void ODModel::flow(Vertex v, int flow_rate)
             it = queue.erase(it);
             c++;
 
-            if(PROCESS_STATS){
+            if(m_config.PROCESS_STATS){
                 m_stats.update_flux();
             }
         }
@@ -80,7 +79,7 @@ void ODModel::set_flag(Vertex v) {
 
     std::list<std::shared_ptr<Agent>>& queue = get(&VertexProperty::queue, m_dual, v);
     //decide whether a node is saturated 
-    if (queue.size() >= MAX_CAP) {
+    if (queue.size() >= m_config.MAX_CAP) {
         get(&VertexProperty::full, m_dual,v) = true;
     } else {
         get(&VertexProperty::full, m_dual, v) = false;

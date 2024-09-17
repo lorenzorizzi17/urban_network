@@ -45,11 +45,11 @@
     <ClInclude Include="src\headers\gridlock_exception.hpp">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="src\headers\parameters.hpp">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
     <ClInclude Include="src\headers\graph_utilities.hpp">
       <Filter>File di origine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\headers\config.hpp">
+      <Filter>File di intestazione</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -57,6 +57,7 @@
     <None Include="graph\graph.dot" />
     <None Include="graph\graph_dual.dot" />
     <None Include="graph\parser.dot" />
+    <None Include="src\config.txt" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="graph\graph_dual.png">
@@ -70,9 +71,6 @@
     <Font Include="graph\font.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\main.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
     <ClCompile Include="src\statistics.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
@@ -95,6 +93,12 @@
       <Filter>File di origine</Filter>
     </ClCompile>
     <ClCompile Include="src\graph_builder.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\config.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
   </ItemGroup>

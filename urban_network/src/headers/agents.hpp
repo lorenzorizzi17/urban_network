@@ -3,9 +3,9 @@
 
 #include<tuple>
 #include"alias.hpp"
+#include "config.hpp"
 
 class Agent {
-
     private:
         Vertex m_curr_road; // vertex in dual graph = road
         Vertex m_dest_road;
@@ -23,7 +23,7 @@ class Agent {
         static int m_instances;
         bool m_trav = false;
         // std::map here is just for debug
-        Agent(Graph&, Vertex, std::map<Vertex, Edge>);
+        Agent(Graph&, Vertex, std::map<Vertex, Edge>, Config const&);
         Agent(Graph&, Vertex, Vertex, std::map<Vertex, Edge>);
 
         Vertex get_vertex() const;

@@ -15,7 +15,7 @@ int gridlock_exception::getCongestedNodes() const {
 }
 
 void gridlock_exception::process() {
-    std::unique_ptr<sf::RenderWindow> gridlock_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(200, 200), "Collapsed to gridlock!");
+    std::unique_ptr<sf::RenderWindow> gridlock_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(450, 60), "Collapsed to gridlock!", sf::Style::None || sf::Style::Close);
     gridlock_window->setFramerateLimit(60);
     sf::Font font;
     if (!font.loadFromFile("graph/font.ttf")) {
@@ -38,7 +38,7 @@ void gridlock_exception::process() {
                 break;
             }
         }
-        gridlock_window->clear(sf::Color::Transparent);
+        gridlock_window->clear(sf::Color::White);
         //disegna
         std::string s = "The system has reached a total gridlock!";
         text.setString(s);

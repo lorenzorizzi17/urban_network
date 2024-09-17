@@ -1,18 +1,15 @@
 #include<fstream>
 #include"headers/statistics.hpp"
 #include"headers/graphics.hpp"
-#include"headers/parameters.hpp"
 
 //constructor (vector of indexes and number of nodes)
-Statistics::Statistics(std::vector<int> index, int N) {
+Statistics::Statistics(std::vector<int> index) {
     m_index = index;
 	m_occ_matrix.resize(m_index.size());
-    m_N = N;
 }
 
 //constructor (every node up to n-1 and number of nodes)
-Statistics::Statistics(int n, int N) {
-    m_N = N;
+Statistics::Statistics(int n) {
     for (int i = 0; i < n; i++) {
         m_index.push_back(i);
     } 
@@ -49,11 +46,11 @@ void Statistics::update_lifespan(int a) {
     m_lifespan.push_back(a + 1);
 }
 
-void Statistics::save(Graph& m_dual) {
+void Statistics::save(Graph& m_dual, int time_max, int N) {
     //save occupation vs time
     for (int i = 0; i < m_index.size(); i++) {
         std::ofstream file;
-        file.open("data/occupation_vs_time/OD_T" + std::to_string(TIME_MAX_SIMULATION) + "_N" + std::to_string(m_N) + "_ix" + std::to_string(m_index[i]) + ".txt");
+        file.open("data/occupation_vs_time/OD_T" + std::to_string(time_max) + "_N" + std::to_string(N) + "_ix" + std::to_string(m_index[i]) + ".txt");
         for (int j = 0; j < m_occ_matrix[i].size(); j++) {
             file << j << " " << m_occ_matrix[i][j] << std::endl;
         }
@@ -61,14 +58,14 @@ void Statistics::save(Graph& m_dual) {
     }
 
     std::ofstream file_flux;
-    file_flux.open("data/flux/OD_T" + std::to_string(TIME_MAX_SIMULATION) + "_N" + std::to_string(m_N) + ".txt", std::ios::app);
+    file_flux.open("data/flux/OD_T" + std::to_string(time_max) + "_N" + std::to_string(N) + ".txt", std::ios::app);
     for (int t = 0; t < m_flux.size(); t++) {
         file_flux << t << " " << m_flux[t] << std::endl;
     }
     file_flux.close();
 
     std::ofstream file_lifespan;
-    file_lifespan.open("data/lifespan/OD_T" + std::to_string(TIME_MAX_SIMULATION) + "_N" + std::to_string(m_N) + ".txt", std::ios::app);
+    file_lifespan.open("data/lifespan/OD_T" + std::to_string(time_max) + "_N" + std::to_string(N) + ".txt", std::ios::app);
     for (int t : m_lifespan) {
         file_lifespan << t << std::endl;
     }
@@ -76,20 +73,20 @@ void Statistics::save(Graph& m_dual) {
 }
 
 
-void Statistics::display_data(std::unique_ptr<sf::RenderWindow>& m_graph_window, std::unique_ptr<sf::RenderWindow>& m_histo_window, std::unique_ptr<sf::RenderWindow>& m_histo_post_window, int m_time) {
-if(LOG_OCCUPATION_VS_TIME){
+void Statistics::display_data(std::unique_ptr<sf::RenderWindow>& m_graph_window, std::unique_ptr<sf::RenderWindow>& m_histo_window, std::unique_ptr<sf::RenderWindow>& m_histo_post_window, int m_time, Config const& c) {
+if(c.LOG_OCCUPATION_VS_TIME){
     m_graph_window->clear(sf::Color(230, 230, 250));
-    draw_real_time_graph(*m_graph_window, m_time, 100, LOG_OCCUPATION_VS_TIME_NODE);
+    draw_real_time_graph(*m_graph_window, m_time, 100, c.LOG_OCCUPATION_VS_TIME_NODE);
     m_graph_window->display();
 }
 
-if (LOG_HISTO_FLOW){
+if (c.LOG_HISTO_FLOW){
     m_histo_window->clear(sf::Color(230, 230, 250));
     draw_real_time_histo_flux(*m_histo_window, 30, m_histo_flux);
     m_histo_window->display();
 }
 
-if(LOG_HISTO_OCC){
+if(c.LOG_HISTO_OCC){
     m_histo_post_window->clear(sf::Color(230, 230, 250));
     draw_histo_post(*m_histo_post_window, m_histo_occ);
     m_histo_post_window->display();

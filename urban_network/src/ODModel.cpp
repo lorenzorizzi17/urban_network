@@ -1,6 +1,5 @@
 #include"headers/ODModel.hpp"
 #include"headers/agents.hpp"
-#include"headers/parameters.hpp"
 #include"headers/gridlock_exception.hpp"
 #include"headers/graph_utilities.hpp"
 
@@ -8,7 +7,8 @@ int Agent::m_instances = 0;
 
 //initialize the simulation
 void ODModel::init(){
-    if (LOAD_GRAPH) {
+	m_config.load_from_file("src/config.txt");
+    if (m_config.LOAD_GRAPH) {
         DEBUG("Loading graph...");
         load_graph("graph/graph.dot", m_graph);
         DEBUG("Direct graph has been successfully loaded into memory");
@@ -17,7 +17,7 @@ void ODModel::init(){
         DEBUG("Dual graph has been successfully loaded into memory");
     } else {
         DEBUG("Building graph...");
-        m_graph = build_graph(N_NODES);
+        m_graph = build_graph(m_config);
         DEBUG("Direct graph has been successfully built");
         DEBUG("Building dual graph...");
         m_dual = make_dual_graph(m_graph, m_conv_map);
@@ -36,23 +36,22 @@ void ODModel::add_agents(int n_agents)
     for (int i = 0; i < n_agents; i++)
     {
         Vertex v = *get_random_vertex(m_dual);
-        boost::get(&VertexProperty::queue, m_dual, v).push_back(std::make_shared<Agent>(m_dual, v, m_conv_map));
+        boost::get(&VertexProperty::queue, m_dual, v).push_back(std::make_shared<Agent>(m_dual, v, m_conv_map,m_config));
     }
 }
 
-ODModel::ODModel(int N) : m_stats( std::vector<int>{LOG_OCCUPATION_VS_TIME_NODE}, N){
+ODModel::ODModel() : m_stats( std::vector<int>{m_config.LOG_OCCUPATION_VS_TIME_NODE}){
     DEBUG("Starting simulation construction...");
     init();
     DEBUG("Creating agents...");
-    add_agents(N);
-    m_N = N;
+    add_agents(m_config.N_AGENTS);
     DEBUG("Agents have been correctly created");
 
-    if (ENABLE_GRAPHICS) {
+    if (m_config.ENABLE_GRAPHICS) {
         DEBUG("Creating windows...");
         m_main_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(display_height, display_height), "Simulation");
         m_stats_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(0.4 * display_height, 0.16 * display_height), "Stats", sf::Style::Resize);
-        m_graph_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(0.6 * display_height, 0.4 * display_height), ("Real-time graph (node " + std::to_string(LOG_OCCUPATION_VS_TIME_NODE) + ")").c_str());
+        m_graph_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(0.6 * display_height, 0.4 * display_height), ("Real-time graph (node " + std::to_string(m_config.LOG_OCCUPATION_VS_TIME_NODE) + ")").c_str());
         m_histo_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(0.6 * display_height, 0.4 * display_height), "Flow histogram");
         m_histo_post_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(0.6 * display_height, 0.4 * display_height), "RT histogram");
         m_main_window->setFramerateLimit(60);
@@ -67,16 +66,16 @@ ODModel::ODModel(int N) : m_stats( std::vector<int>{LOG_OCCUPATION_VS_TIME_NODE}
 
 ODModel::~ODModel() {
     //at destruction time, parse the graph
-    if(PARSING_MODE){
+    if(m_config.PARSING_MODE){
         //build_parser(m_parser, m_N);
     }
     //save the statistics data
-	if (PROCESS_STATS) {
-		m_stats.save(m_dual);
+	if (m_config.PROCESS_STATS) {
+		m_stats.save(m_dual,m_config.TIME_MAX_SIMULATION, m_config.N_AGENTS);
 	}
 }
 
-void ODModel::run_graphics(int time_max) {
+void ODModel::run_graphics() {
     //display stuff
     #ifdef _DEBUG
     std::cout << "\x1b[31m" << "################################################################" << "\x1b[0m";
@@ -85,7 +84,7 @@ void ODModel::run_graphics(int time_max) {
     #endif
 
     //sim loop
-    while (m_main_window->isOpen() && m_time < time_max)
+    while (m_main_window->isOpen() && m_time < m_config.TIME_MAX_SIMULATION)
     {
         //event handler
         handle_events(m_main_window);
@@ -98,25 +97,25 @@ void ODModel::run_graphics(int time_max) {
         m_stats.clear();
 
         //dynamic evolution: flow, update weights, erase agents
-        BGL_FORALL_VERTICES(v, m_dual, Graph) { flow(v, FLOW_RATE); }
+        BGL_FORALL_VERTICES(v, m_dual, Graph) { flow(v, m_config.FLOW_RATE); }
         BGL_FORALL_VERTICES(v, m_dual, Graph) { update_weights(v); }
         BGL_FORALL_VERTICES(v, m_dual, Graph) { erase_agents(v); }
         BGL_FORALL_VERTICES(v, m_dual, Graph) { set_flag(v); }
 
         //if we want to process stats, update data          
-        if (PROCESS_STATS) {
+        if (m_config.PROCESS_STATS) {
             m_stats.update(m_dual);
-            m_stats.display_data(m_graph_window, m_histo_window, m_histo_post_window, m_time);
+            m_stats.display_data(m_graph_window, m_histo_window, m_histo_post_window, m_time, m_config);
         }
 
         //draws the outcome
-        render_graph(*m_main_window, m_graph, m_dual, m_conv_map, std::sqrt(N_NODES));
+        render_graph(*m_main_window, m_graph, m_dual, m_conv_map, std::sqrt(m_config.N_NODES));
 
         //stops the simulation if a hard gridlock is reached
         check_for_gridlock(m_dual, m_time);
 
         //display SFML windows
-        set_stats_text(display_height, m_time, m_dual, m_stats_window);
+        set_stats_text(display_height, m_time, m_dual, m_stats_window,m_config);
         m_stats_window->display();
         m_main_window->display();
 
@@ -129,13 +128,13 @@ void ODModel::run_graphics(int time_max) {
 }
 
 
-void ODModel::run(int time_max) {
-    while (m_time < time_max){
+void ODModel::run( ) {
+    while (m_time < m_config.TIME_MAX_SIMULATION){
         //setup statistics panel
         m_stats.clear();
 
         //dynamical rule: flow, update weights, erase agents
-        BGL_FORALL_VERTICES(v, m_dual, Graph) { flow(v, FLOW_RATE); }
+        BGL_FORALL_VERTICES(v, m_dual, Graph) { flow(v, m_config.FLOW_RATE); }
         BGL_FORALL_VERTICES(v, m_dual, Graph) { update_weights(v); }
         BGL_FORALL_VERTICES(v, m_dual, Graph) { erase_agents(v); }
         BGL_FORALL_VERTICES(v, m_dual, Graph) { set_flag(v);}

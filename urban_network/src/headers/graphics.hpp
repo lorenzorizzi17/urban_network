@@ -2,8 +2,9 @@
 #define GRAPHICS
 
 #include<SFML/Graphics.hpp>
+#include"config.hpp"
 
-void inline set_stats_text(float display_height, int t, Graph const& dual, std::unique_ptr<sf::RenderWindow>& stats_window) {
+void inline set_stats_text(float display_height, int t, Graph const& dual, std::unique_ptr<sf::RenderWindow>& stats_window, Config const& c) {
     sf::Font font;
     if (!font.loadFromFile("graph/font.ttf")) {
         throw std::runtime_error("Font non caricato"); // Gestisce l'errore se il font non viene caricato
@@ -13,7 +14,7 @@ void inline set_stats_text(float display_height, int t, Graph const& dual, std::
     text.setCharacterSize(20);
     text.setFillColor(sf::Color::Black);
     text.setPosition(0.05f * display_height, 0.025f * display_height);
-    std::string s = "t = " + std::to_string(t) + "\nN. agents: " + std::to_string(2000) + "\nFlow rate: " + std::to_string(FLOW_RATE);
+    std::string s = "t = " + std::to_string(t) + "\nN. agents: " + std::to_string(c.N_AGENTS) + "\nFlow rate: " + std::to_string(c.FLOW_RATE);
     text.setString(s);
     stats_window->draw(text);
 }

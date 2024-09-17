@@ -6,8 +6,6 @@
 #include<memory>
 #include<iostream>
 
-#include"parameters.hpp"
-
 //need at least declaration
 class Agent;
 

@@ -162,14 +162,16 @@
   <ItemGroup>
     <ClInclude Include="src\headers\agents.hpp" />
     <ClInclude Include="src\headers\alias.hpp" />
+    <ClInclude Include="src\headers\config.hpp" />
     <ClInclude Include="src\headers\dijkstra.hpp" />
     <ClInclude Include="src\headers\dual_graph.hpp" />
     <ClCompile Include="src\dynamics.cpp" />
     <ClInclude Include="src\headers\graph_builder.hpp" />
     <ClInclude Include="src\headers\gridlock_exception.hpp" />
-    <ClInclude Include="src\headers\parameters.hpp" />
     <ClInclude Include="src\headers\parser.hpp" />
     <ClCompile Include="src\graph_builder.cpp" />
+    <ClCompile Include="src\config.cpp" />
+    <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\parser.cpp" />
     <ClCompile Include="src\renderer.cpp" />
     <ClInclude Include="src\headers\ODModel.hpp" />
@@ -181,6 +183,7 @@
     <None Include="graph\graph.dot" />
     <None Include="graph\graph_dual.dot" />
     <None Include="graph\parser.dot" />
+    <None Include="src\config.txt" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="graph\graph.png" />
@@ -195,7 +198,6 @@
     <ClInclude Include="src\headers\graph_utilities.hpp" />
     <ClCompile Include="src\ODModel.cpp" />
     <ClCompile Include="src\statistics.cpp" />
-    <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

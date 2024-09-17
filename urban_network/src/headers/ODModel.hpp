@@ -6,8 +6,8 @@
 #include "graph_builder.hpp"
 #include "parser.hpp"
 #include "graphics.hpp"
+#include "config.hpp"
 #include "statistics.hpp"
-#include"parameters.hpp"
 
 #if _DEBUG
 #define DEBUG(x) DEBUG(x)
@@ -17,11 +17,11 @@
 
 class ODModel{
     public:
-        ODModel(int);
+        ODModel();
         ~ODModel();
 
-        void run_graphics(int);
-        void run(int);
+        void run_graphics();
+        void run();
 
     private:
         void init();
@@ -40,6 +40,8 @@ class ODModel{
 		std::unique_ptr<sf::RenderWindow> m_graph_window;
 		std::unique_ptr<sf::RenderWindow> m_histo_window;
 		std::unique_ptr<sf::RenderWindow> m_histo_post_window;
+
+        Config m_config;
 
         Graph m_graph;
         Graph m_dual;

@@ -2,7 +2,6 @@
 
 #include "headers/alias.hpp"
 #include "headers/agents.hpp"
-#include"headers/parameters.hpp"
 #include "headers/ODModel.hpp"
 
 #define M_PI 3.14159
@@ -58,7 +57,7 @@ void ODModel::render_graph(sf::RenderWindow&w, Graph const &g, Graph const &dual
         // Ruota il rettangolo per allinearlo alla linea tra i due punti
         rectangle.setRotation(angle);
         int occ = boost::get(&VertexProperty::queue, dual, *v).size();
-        rectangle.setFillColor(interpolateColor(occ,MAX_CAP));
+        rectangle.setFillColor(interpolateColor(occ, m_config.MAX_CAP));
 
         w.draw(rectangle);
     }

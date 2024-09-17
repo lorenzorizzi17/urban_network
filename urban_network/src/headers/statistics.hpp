@@ -5,6 +5,7 @@
 #include<memory>
 
 #include"alias.hpp"
+#include"config.hpp"
 #include<SFML/Graphics.hpp>
 
 typedef std::map<int, int> Histogram;
@@ -12,10 +13,10 @@ typedef std::map<int, int> Histogram;
 class Statistics {
     public: 
     //constructor (vector of indexes and number of nodes)
-    Statistics(std::vector<int>, int);
+    Statistics(std::vector<int>);
 
 	//constructor (every node up to n-1 and number of nodes)
-    Statistics(int, int);
+    Statistics(int);
 
     //get the inst flux
     int get_flux() const;
@@ -36,10 +37,10 @@ class Statistics {
     void update_lifespan(int);
 
     //save the stats in .txt files
-    void save(Graph&);
+    void save(Graph&, int, int);
 
     //display graphically the data
-    void display_data(std::unique_ptr<sf::RenderWindow>&, std::unique_ptr<sf::RenderWindow>&, std::unique_ptr<sf::RenderWindow>&, int);
+    void display_data(std::unique_ptr<sf::RenderWindow>&, std::unique_ptr<sf::RenderWindow>&, std::unique_ptr<sf::RenderWindow>&, int, Config const&);
     
     private:
         void draw_real_time_graph(sf::RenderWindow& m_main_window, int, int, int );
@@ -52,7 +53,6 @@ class Statistics {
         std::vector<int> m_index;
         std::vector<std::vector<int>> m_occ_matrix;
 
-        int m_N;
         int m_inst_flux = 0;
 
         //buffer items

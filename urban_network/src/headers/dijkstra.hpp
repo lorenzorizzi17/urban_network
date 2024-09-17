@@ -3,8 +3,9 @@
 
 #include <boost/graph/dijkstra_shortest_paths.hpp>
 #include "./alias.hpp"
+#include"config.hpp"
 
-inline std::tuple<Vertex, std::vector<Vertex>, double> get_vertex_based_on_dijkstra_shortest_path(Vertex const vi, Graph const &g)
+inline std::tuple<Vertex, std::vector<Vertex>, double> get_vertex_based_on_dijkstra_shortest_path(Vertex const vi, Graph const &g, Config const& c)
 {
     boost::property_map<Graph, boost::vertex_index_t>::type map_indices = boost::get(boost::vertex_index, g);
 
@@ -27,7 +28,7 @@ inline std::tuple<Vertex, std::vector<Vertex>, double> get_vertex_based_on_dijks
     std::advance(vf, i);
     int occ = get(&VertexProperty::queue, g, *vf).size();
 
-    while ((distance < MIN_DIST_DIJKSTRA) || (occ >= MAX_SPAWNABLE)){
+    while ((distance < c.MIN_DIST_DIJKSTRA) || (occ >= c.MAX_SPAWNABLE)){
         i = dis(gen);
         distance = d[i];
         vf = boost::vertices(g).first;

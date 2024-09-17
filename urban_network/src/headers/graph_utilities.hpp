@@ -18,7 +18,7 @@ inline Iter_Vertex get_random_vertex(Graph const& g) {
     while (c < 1000) {
         Iter_Vertex vi = boost::vertices(g).first;
         std::advance(vi, dis(gen));
-        if (get(&VertexProperty::queue, g, *vi).size() < MAX_SPAWNABLE) {
+        if (get(&VertexProperty::queue, g, *vi).size() < 150) {
             return vi;
         }
         c++;

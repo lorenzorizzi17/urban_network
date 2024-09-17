@@ -2,6 +2,7 @@
 #define GRAPH_BUILDER
 
 #include <boost/graph/graphviz.hpp>
+#include "config.hpp"
 #include "alias.hpp"
 #include <cstdlib>
 
@@ -21,7 +22,7 @@ void randomize_weight_map_uniform(Graph&, double, double);
 
 void set_weights(Graph&);
 
-Graph build_graph(int);
+Graph build_graph(Config const&);
 
 void load_graph_dual(const std::string&, Graph&, Graph&, std::map<Vertex, Edge>&);
 

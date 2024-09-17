@@ -1,7 +1,8 @@
 #include"headers/agents.hpp"
 #include "headers/dijkstra.hpp"
 
-Agent::Agent(Graph& g_dual, Vertex spawn_point, std::map<Vertex, Edge> dual_map)
+
+Agent::Agent(Graph& g_dual, Vertex spawn_point, std::map<Vertex, Edge> dual_map, Config const& conf)
 {
     m_internal_time = 1;
     m_id = m_instances;
@@ -13,7 +14,7 @@ Agent::Agent(Graph& g_dual, Vertex spawn_point, std::map<Vertex, Edge> dual_map)
     m_curr_road = spawn_point;
     // randomly chose destination vertex and compute dijkstra shortest path
     double distance = 0;
-    std::tie(m_dest_road, m_path, distance) = get_vertex_based_on_dijkstra_shortest_path(m_curr_road, g_dual);
+    std::tie(m_dest_road, m_path, distance) = get_vertex_based_on_dijkstra_shortest_path(m_curr_road, g_dual, conf);
 }
 
 Vertex Agent::get_vertex() const

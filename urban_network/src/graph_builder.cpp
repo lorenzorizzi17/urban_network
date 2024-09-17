@@ -248,8 +248,9 @@ void set_weights(Graph& dual) {
     }
 }
 
-Graph build_graph(int const N) {
+Graph build_graph(Config const& config) {
     // creating manhattan data
+	int N = config.N_NODES;
     create_manhattan_data(std::sqrt(N));
 
     // storing the graph based on previous operation on .txt file
@@ -266,14 +267,14 @@ Graph build_graph(int const N) {
     }
 
     // add a little bit of randomization
-    add_diagonal_roads(g, N_DIAGONAL_ROADS, std::sqrt(N));
-    remove_random_edge(g, N_REMOVED_ROADS, std::sqrt(N));
+    add_diagonal_roads(g, config.N_DIAGONAL_ROADS, std::sqrt(N));
+    remove_random_edge(g, config.N_REMOVED_ROADS, std::sqrt(N));
     int c = 0;
     for (auto it = boost::edges(g).first; it != boost::edges(g).second; it++, c++) {
         get(&EdgeProperty::index, g, *it) = c;
     }
     // randomize edges weight
-    randomize_weight_map_uniform(g, ROAD_WEIGHT - 1, ROAD_WEIGHT + 1); // as for now, uniform distribution. Maybe gaussian?
+    randomize_weight_map_uniform(g, config.ROAD_WEIGHT - 0.1, config.ROAD_WEIGHT + 0.1); // as for now, uniform distribution. Maybe gaussian?
     set_weights(g);
     // print_weight_map<Graph, Iter_Edge>(g);
     return g;
