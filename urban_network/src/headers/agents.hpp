@@ -1,17 +1,11 @@
 #ifndef AGENTS
 #define AGENTS
 
-#include "./alias.hpp"
-#include"stats.hpp"
-#include "randomize.hpp"
-#include "./dijkstra.hpp"
+#include<tuple>
+#include"alias.hpp"
 
+class Agent {
 
-namespace od
-{
-    
-    class Agent
-    {
     private:
         Vertex m_curr_road; // vertex in dual graph = road
         Vertex m_dest_road;
@@ -20,6 +14,7 @@ namespace od
        
         int m_id = 0;
         int m_perm_time = 0;
+
         std::map<Vertex, Edge> m_dual_map;
         Graph* m_dual;
 
@@ -28,165 +23,35 @@ namespace od
         static int m_instances;
         bool m_trav = false;
         // std::map here is just for debug
-        Agent(Graph& g_dual, Vertex spawn_point, std::map<Vertex, Edge> dual_map)
-        {
-            m_internal_time = 1;
-            m_id = m_instances;
-            m_instances++;
-            m_perm_time = 0;
-            m_dual_map = dual_map;
-            m_dual = &g_dual;
-            // randomly chose first vertex
-            m_curr_road = spawn_point;
-            // randomly chose destination vertex and compute dijkstra shortest path
-            double distance = 0;
-            std::tie(m_dest_road, m_path, distance) = get_vertex_based_on_dijkstra_shortest_path(m_curr_road, g_dual);
-            // prints some info
-            //DEBUG("Agents n. " + std::to_string(this->get_id()) + " born in road: " + std::to_string(g_dual[this->get_vertex()].index) + ", dest in " + std::to_string(g_dual[this->get_vertex_destination()].index) + " (d = " + std::to_string(distance) + ")");
-        }
+        Agent(Graph&, Vertex, std::map<Vertex, Edge>);
+        Agent(Graph&, Vertex, Vertex, std::map<Vertex, Edge>);
 
-        Agent(Graph& g_dual, Vertex spawn_point, Vertex dest_point, std::map<Vertex, Edge> dual_map)
-        {
-            m_internal_time = 1;
-            m_id = m_instances;
-            m_instances++;
-            m_dual_map = dual_map;
-            m_dual = &g_dual;
-            // randomly chose first vertex
-            m_curr_road = spawn_point;
-            // randomly chose destination vertex and compute dijkstra shortest path
-            double distance = 0;
-            m_dest_road = dest_point;
-            std::tie(m_path, distance) = get_dijkstra_shortest_path(m_curr_road, m_dest_road, g_dual);
-            // prints some info
-            //DEBUG("Agents n. " + std::to_string(this->get_id()) + " born in road: " + std::to_string(g_dual[this->get_vertex()].index) + ", dest in " + std::to_string(g_dual[this->get_vertex_destination()].index) + " (d = " + std::to_string(distance) + ")");
-        }
+        Vertex get_vertex() const;
+        Vertex get_vertex_destination() const;
 
-        //agent that do not move. Used for debug purpose
-        Agent(Graph& g_dual, Vertex spawn_point, Vertex dest_point, std::map<Vertex, Edge> dual_map, int n_debug)
-        {
-            m_internal_time = 1;
-            m_id = m_instances;
-            m_instances++;
-            m_dual_map = dual_map;
-            m_dual = &g_dual;
-            // randomly chose first vertex
-            m_curr_road = spawn_point;
-            // randomly chose destination vertex and compute dijkstra shortest path
-            m_dest_road = dest_point;
-            for (int i = 0; i < n_debug; i++) {
-                m_path.push_back(m_curr_road);
-            }
-            // prints some info
-            //DEBUG("Agents n. " + std::to_string(this->get_id()) + " born in road: " + std::to_string(this->get_vertex()) + ", dest in " + std::to_string(this->get_vertex_destination()) + " (d = " + std::to_string(distance) + ")");
-        }
+        Edge get_road() const;
+        Edge get_road_destination() const;
+        std::vector<Vertex> get_route() const;
+
+        void set_edge(Vertex const& v);
 
 
-        Vertex get_vertex() const
-        {
-            return m_curr_road;
-        }
+        void evolve_dijsktra();
 
-        Edge get_road() const
-        {
-            return m_dual_map.at(m_curr_road);
-        }
+        bool arrived() const;
 
-        Edge get_road_destination() const
-        {
-            return m_dual_map.at(m_dest_road);
-        }
+        int get_perm_time() const;
 
-        Vertex get_vertex_destination() const {
-            return m_dest_road;
-        }
+        int get_id() const;
 
-        void set_edge(Vertex const& v)
-        {
-            m_curr_road = v;
-        }
+        bool has_traveled() const;
 
-        std::vector<Vertex> get_route() const
-        {
-            return m_path;
-        }
+        void set_traveled(bool);
 
-        void evolve_dijsktra()
-        {
-            m_curr_road = m_path[m_internal_time];
-            m_internal_time++;
-            m_trav = true;
-            m_perm_time = 0;
-        }
+        Vertex get_next_vertex() const;
 
-        bool arrived() const
-        {
-            return m_curr_road == m_dest_road;
-        }
+        void set_perm_time(int);
+};
 
-        int get_perm_time() const {
-            return m_perm_time;
-        }
-
-        int get_id() const
-        {
-            return m_id;
-        }
-
-        bool has_traveled() const
-        {
-            return m_trav;
-        }
-
-        void set_traveled(bool b)
-        {
-            m_trav = b;
-        }
-
-        Vertex get_next_vertex() const
-        {
-            return m_path[m_internal_time];
-        }
-
-        void set_perm_time(int n) {
-            m_perm_time = n;
-        }
-
-        
-
-    };
-
-    Iter_Vertex get_random_vertex(Graph const& g) {
-        static std::random_device rd;  // Seed del generatore
-        static std::mt19937 gen(rd()); // Generatore Mersenne Twister
-        std::uniform_int_distribution<> dis; // Distribuzione uniforme
-
-        Iter_Vertex vi, vi_end;
-        std::tie(vi, vi_end) = boost::vertices(g);
-        int num_e = boost::num_vertices(g);
-        dis.param(std::uniform_int_distribution<>::param_type(0, num_e - 1));
-
-        int c = 0;
-        while (c<1000) {
-            Iter_Vertex vi = boost::vertices(g).first;
-            std::advance(vi, dis(gen));
-            if (get(&VertexProperty::queue, g, *vi).size() < MAX_SPAWNABLE) {
-                return vi;
-            }
-            c++;
-        }
-        throw std::runtime_error("Unable to locate new agents");
-    }
-
-
-    void add_agents(Graph& g_dual, int N, std::map<Vertex, Edge>& dual_map)
-    {
-        for (int i = 0; i < N; i++)
-        {
-            Vertex v = *get_random_vertex(g_dual);
-            boost::get(&VertexProperty::queue, g_dual, v).push_back(std::make_shared<od::Agent>(g_dual, v, dual_map));
-        }
-    }
-}
 
 #endif

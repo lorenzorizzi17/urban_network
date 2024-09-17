@@ -21,34 +21,16 @@
     <ClInclude Include="src\headers\alias.hpp">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="src\headers\create_data.hpp">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="src\headers\debugger.hpp">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
     <ClInclude Include="src\headers\dijkstra.hpp">
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="src\headers\dual_graph.hpp">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="src\headers\dynamics.hpp">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
     <ClInclude Include="src\headers\graph_builder.hpp">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="src\headers\randomize.hpp">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="src\headers\renderer.hpp">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
     <ClInclude Include="src\headers\ODModel.hpp">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
-    <ClInclude Include="src\headers\update_weights.hpp">
       <Filter>File di intestazione</Filter>
     </ClInclude>
     <ClInclude Include="src\headers\parser.hpp">
@@ -57,17 +39,17 @@
     <ClInclude Include="src\headers\graphics.hpp">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="src\headers\printers.hpp">
+    <ClInclude Include="src\headers\statistics.hpp">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="src\headers\gridlock.hpp">
+    <ClInclude Include="src\headers\gridlock_exception.hpp">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="src\headers\stats.hpp">
+    <ClInclude Include="src\headers\parameters.hpp">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="src\headers\gridlock_ecception.hpp">
-      <Filter>File di intestazione</Filter>
+    <ClInclude Include="src\headers\graph_utilities.hpp">
+      <Filter>File di origine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -89,6 +71,30 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\statistics.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ODModel.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\agents.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gridlock_exception.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dynamics.cpp">
+      <Filter>File di intestazione</Filter>
+    </ClCompile>
+    <ClCompile Include="src\renderer.cpp">
+      <Filter>File di intestazione</Filter>
+    </ClCompile>
+    <ClCompile Include="src\parser.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graph_builder.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
   </ItemGroup>

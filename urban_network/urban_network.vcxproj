@@ -94,6 +94,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);SFML_STATIC;PROJECTNAME="$(ProjectName)"</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\dev\SFML\SFML-2.6.1\include;C:\dev\boost_1_82_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -111,6 +112,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);SFML_STATIC;PROJECTNAME="$(ProjectName)"</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\dev\SFML\SFML-2.6.1\include;C:\dev\boost_1_82_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -128,6 +130,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);SFML_STATIC;SFML_STATIC;</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\dev\SFML\SFML-2.6.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -145,6 +148,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);SFML_STATIC;SFML_STATIC;</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\dev\SFML\SFML-2.6.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -158,22 +162,19 @@
   <ItemGroup>
     <ClInclude Include="src\headers\agents.hpp" />
     <ClInclude Include="src\headers\alias.hpp" />
-    <ClInclude Include="src\headers\create_data.hpp" />
-    <ClInclude Include="src\headers\debugger.hpp" />
     <ClInclude Include="src\headers\dijkstra.hpp" />
     <ClInclude Include="src\headers\dual_graph.hpp" />
-    <ClInclude Include="src\headers\dynamics.hpp" />
+    <ClCompile Include="src\dynamics.cpp" />
     <ClInclude Include="src\headers\graph_builder.hpp" />
-    <ClInclude Include="src\headers\gridlock_ecception.hpp" />
+    <ClInclude Include="src\headers\gridlock_exception.hpp" />
+    <ClInclude Include="src\headers\parameters.hpp" />
     <ClInclude Include="src\headers\parser.hpp" />
-    <ClInclude Include="src\headers\printers.hpp" />
-    <ClInclude Include="src\headers\randomize.hpp" />
-    <ClInclude Include="src\headers\renderer.hpp" />
+    <ClCompile Include="src\graph_builder.cpp" />
+    <ClCompile Include="src\parser.cpp" />
+    <ClCompile Include="src\renderer.cpp" />
     <ClInclude Include="src\headers\ODModel.hpp" />
     <ClInclude Include="src\headers\graphics.hpp" />
-    <ClInclude Include="src\headers\gridlock.hpp" />
-    <ClInclude Include="src\headers\stats.hpp" />
-    <ClInclude Include="src\headers\update_weights.hpp" />
+    <ClInclude Include="src\headers\statistics.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\manhattan_grid.dat" />
@@ -189,6 +190,11 @@
     <Font Include="graph\font.ttf" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\agents.cpp" />
+    <ClCompile Include="src\gridlock_exception.cpp" />
+    <ClInclude Include="src\headers\graph_utilities.hpp" />
+    <ClCompile Include="src\ODModel.cpp" />
+    <ClCompile Include="src\statistics.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

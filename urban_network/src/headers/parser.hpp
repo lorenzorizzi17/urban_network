@@ -1,22 +1,24 @@
+#ifndef PARSER_HPP
+#define PARSER_HPP
+
 #include "alias.hpp"
 
+struct ParserProperty {
+    int index;
+    int pass;
+};
+
+typedef boost::adjacency_list<boost::vecS,                                  // stores out edges of each vertex in a std::list
+    boost::vecS,                                  // stores vertex set in a std::vector
+    boost::bidirectionalS,                             // graph is directed
+    ParserProperty, // vertex property: a list of agents heap allocated
+    boost::property<boost::edge_weight_t, double> // edge property: a weight
+> Parser;
+
+typedef boost::graph_traits<Parser>::vertex_descriptor PVertex;
+typedef boost::graph_traits<Parser>::edge_descriptor PEdge;
 
 
-Parser make_parser(Graph const& g) {
-	Parser p;
-	for (auto it = boost::vertices(g).first; it != boost::vertices(g).second; it++) {
-		PVertex v = boost::add_vertex(p);
-		p[v].index = g[*it].index;
-		p[v].pass = 0;
-		boost::add_edge(v,v,{0},p);
-	}
+Parser make_parser(Graph const& g);
 
-	for (auto it = boost::edges(g).first; it != boost::edges(g).second; it++) {
-		Vertex s = boost::source(*it,g);
-		Vertex t = boost::target(*it, g);
-		PVertex ps = *std::find_if(boost::vertices(p).first, boost::vertices(p).second, [&](PVertex v) {return p[v].index == g[s].index; });
-		PVertex pt = *std::find_if(boost::vertices(p).first, boost::vertices(p).second, [&](PVertex v) {return p[v].index == g[t].index; });
-		boost::add_edge(ps, pt, { 0 }, p);
-	}
-	return p;
-}
+#endif
