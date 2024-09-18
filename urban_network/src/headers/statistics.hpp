@@ -1,4 +1,5 @@
 #ifndef STATISTICS
+#define STATISTICS
 
 #include<vector>
 #include<map>
@@ -21,6 +22,9 @@ class Statistics {
     //get the inst flux
     int get_flux() const;
 
+    //get the inst lifespan
+	std::vector<int> get_lifespan() const;
+
 	//get the occupation history of the node with index ix
     std::vector<int> get_occ(int) const;
 
@@ -40,13 +44,14 @@ class Statistics {
     void save(Graph&, int, int);
 
     //display graphically the data
-    void display_data(std::unique_ptr<sf::RenderWindow>&, std::unique_ptr<sf::RenderWindow>&, std::unique_ptr<sf::RenderWindow>&, int, Config const&);
+    void display_data(std::unique_ptr<sf::RenderWindow>&, int, Config const&);
     
     private:
-        void draw_real_time_graph(sf::RenderWindow& m_main_window, int, int, int );
-        void draw_real_time_histo_flux(sf::RenderWindow& m_main_window, int, Histogram&);
-        void draw_histo_post(sf::RenderWindow& m_main_window, Histogram&);
-    
+        void draw_real_time_graph(sf::RenderWindow& , int, int, int, int);
+        void draw_real_time_histo_flux(sf::RenderWindow& , int, Histogram&);
+        void draw_histo_post(sf::RenderWindow& , Histogram&);
+		void draw_histo_occ(sf::RenderWindow& , int, int, int, int, Histogram&); 
+        void draw_histo_lifespan(sf::RenderWindow&, Histogram&, int, int&);
     private:
         std::vector<int> m_flux;
         std::vector<int> m_lifespan;
@@ -59,6 +64,8 @@ class Statistics {
         std::vector<sf::RectangleShape> m_buffer;
         Histogram m_histo_flux;
         Histogram m_histo_occ;
+		Histogram m_histo_lifespan;
+        int m_index_lifespan = 0;
 };
 
 

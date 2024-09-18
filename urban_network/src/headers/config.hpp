@@ -14,6 +14,7 @@ struct Config {
 	bool LOG_HISTO_FLOW = true;
 	bool LOG_HISTO_OCC = true;
 	bool LOG_OCCUPATION_VS_TIME = true;
+	bool LOG_HISTO_LIFESPAN = true;
 	int LOG_OCCUPATION_VS_TIME_NODE = 355;
 
 	//when building

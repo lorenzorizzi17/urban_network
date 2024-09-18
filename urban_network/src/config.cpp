@@ -39,5 +39,6 @@ void Config::load_from_file(std::string const& s)
 		if (key == "FLOW_RATE") FLOW_RATE = std::stoi(value);
 		if (key == "TIME_TO_SLEEP") TIME_TO_SLEEP = std::stoi(value);
 		if (key == "TIME_MAX_SIMULATION") TIME_MAX_SIMULATION = std::stoi(value);
+		if (key == "LOG_HISTO_LIFESPAN") LOG_HISTO_LIFESPAN = (value == "true");
 	}
 }

@@ -65,9 +65,9 @@ void ODModel::erase_agents(Vertex v)
     std::list<std::shared_ptr<Agent>>& queue = boost::get(&VertexProperty::queue, m_dual, v);
     auto it = std::find_if(queue.begin(), queue.end(), [](std::shared_ptr<Agent>& a_ptr){ return a_ptr->arrived(); });
     while (it != queue.end()) {
-        #if PROCESS_STATS
-            s.update_lifespan((*it)->m_total_time);
-        #endif
+        if(m_config.PROCESS_STATS){
+            m_stats.update_lifespan((*it)->m_total_time);
+        }
         queue.erase(it);
         add_agents(1);
         it = std::find_if(queue.begin(), queue.end(), [](std::shared_ptr<Agent>& a_ptr){ return a_ptr->arrived(); });

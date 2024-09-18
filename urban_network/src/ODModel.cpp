@@ -49,16 +49,10 @@ ODModel::ODModel() : m_stats( std::vector<int>{m_config.LOG_OCCUPATION_VS_TIME_N
 
     if (m_config.ENABLE_GRAPHICS) {
         DEBUG("Creating windows...");
-        m_main_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(display_height, display_height), "Simulation");
+        m_main_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(2*display_height, display_height), "Simulation");
         m_stats_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(0.4 * display_height, 0.16 * display_height), "Stats", sf::Style::Resize);
-        m_graph_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(0.6 * display_height, 0.4 * display_height), ("Real-time graph (node " + std::to_string(m_config.LOG_OCCUPATION_VS_TIME_NODE) + ")").c_str());
-        m_histo_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(0.6 * display_height, 0.4 * display_height), "Flow histogram");
-        m_histo_post_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(0.6 * display_height, 0.4 * display_height), "RT histogram");
         m_main_window->setFramerateLimit(60);
         m_stats_window->setFramerateLimit(60);
-        m_graph_window->setFramerateLimit(60);
-        m_histo_window->setFramerateLimit(60);
-        m_histo_post_window->setFramerateLimit(60);
         DEBUG("Windows created.");
     }
     DEBUG("Simulation is now ready to start");
@@ -83,9 +77,11 @@ void ODModel::run_graphics() {
     std::cout << "\x1b[31m" << "################################################################" << "\x1b[0m" << std::endl;
     #endif
 
+    sf::Clock clock;
     //sim loop
     while (m_main_window->isOpen() && m_time < m_config.TIME_MAX_SIMULATION)
     {
+        sf::Time sftime = clock.restart();
         //event handler
         handle_events(m_main_window);
 
@@ -105,18 +101,18 @@ void ODModel::run_graphics() {
         //if we want to process stats, update data          
         if (m_config.PROCESS_STATS) {
             m_stats.update(m_dual);
-            m_stats.display_data(m_graph_window, m_histo_window, m_histo_post_window, m_time, m_config);
+            m_stats.display_data(m_main_window, m_time, m_config);
         }
 
-        //draws the outcome
-        render_graph(*m_main_window, m_graph, m_dual, m_conv_map, std::sqrt(m_config.N_NODES));
+        //draws the simulation on the appropriate panel
+        render_graph(*m_main_window, m_graph, m_dual, m_conv_map);
+        //draw the statistics panel
+        render_stat_panel(*m_main_window, m_config,int(1 / sftime.asSeconds()));
 
         //stops the simulation if a hard gridlock is reached
         check_for_gridlock(m_dual, m_time);
 
         //display SFML windows
-        set_stats_text(display_height, m_time, m_dual, m_stats_window,m_config);
-        m_stats_window->display();
         m_main_window->display();
 
         #if TIME_TO_SLEEP
