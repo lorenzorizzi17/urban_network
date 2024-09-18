@@ -3,7 +3,7 @@
 
 #include<tuple>
 #include"alias.hpp"
-#include "config.hpp"
+#include"config.hpp"
 
 class Agent {
     private:
@@ -17,6 +17,8 @@ class Agent {
 
         std::map<Vertex, Edge> m_dual_map;
         Graph* m_dual;
+
+		static Chart m_chart;
 
     public:
         int m_total_time = 0;
@@ -51,6 +53,8 @@ class Agent {
         Vertex get_next_vertex() const;
 
         void set_perm_time(int);
+
+        static void initialize_chart(Graph const&);
 };
 
 

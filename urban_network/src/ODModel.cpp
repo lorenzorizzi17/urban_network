@@ -4,6 +4,7 @@
 #include"headers/graph_utilities.hpp"
 
 int Agent::m_instances = 0;
+Chart Agent::m_chart;
 
 //initialize the simulation
 void ODModel::init(){
@@ -29,6 +30,8 @@ void ODModel::init(){
     DEBUG("Creating parser graph...");
     m_parser = make_parser(m_dual);
     DEBUG("Parser graph correctly built.");
+    Agent::initialize_chart(m_dual);
+
 }
 
 void ODModel::add_agents(int n_agents)

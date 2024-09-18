@@ -14,7 +14,7 @@ Agent::Agent(Graph& g_dual, Vertex spawn_point, std::map<Vertex, Edge> dual_map,
     m_curr_road = spawn_point;
     // randomly chose destination vertex and compute dijkstra shortest path
     double distance = 0;
-    std::tie(m_dest_road, m_path, distance) = get_vertex_based_on_dijkstra_shortest_path(m_curr_road, g_dual, conf);
+    std::tie(m_dest_road, m_path, distance) = get_vertex_based_on_dijkstra_shortest_path(m_curr_road, g_dual, conf, Agent::m_chart);
 }
 
 Vertex Agent::get_vertex() const
@@ -85,4 +85,9 @@ Vertex Agent::get_next_vertex() const
 
 void Agent::set_perm_time(int n) {
     m_perm_time = n;
+}
+
+void Agent::initialize_chart(Graph const& g)
+{
+    Agent::m_chart = create_static_chart(g);
 }

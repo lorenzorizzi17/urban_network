@@ -49,7 +49,7 @@ typedef boost::property_map<Graph, boost::vertex_index_t>::type IdMap;
 //typedef boost::property_map<Graph, &VertexProperty::queue_t>::type AgentMap;
 typedef boost::graph_traits<Graph>::vertex_iterator Iter_Vertex;
 typedef boost::graph_traits<Graph>::vertices_size_type size_type;
-
+typedef std::vector<std::vector<double>> Chart;
 
 
 void inline DEBUG(std::string const& message){
