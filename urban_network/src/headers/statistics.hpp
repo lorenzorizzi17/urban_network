@@ -48,7 +48,7 @@ class Statistics {
     
     private:
         void draw_real_time_graph(sf::RenderWindow& , int, int, int, int);
-        void draw_real_time_histo_flux(sf::RenderWindow& , int, Histogram&);
+        void draw_real_time_histo_flux(sf::RenderWindow& , int,int,int, Histogram&);
         void draw_histo_post(sf::RenderWindow& , Histogram&);
 		void draw_histo_occ(sf::RenderWindow& , int, int, int, int, Histogram&); 
         void draw_histo_lifespan(sf::RenderWindow&, Histogram&, int, int&);

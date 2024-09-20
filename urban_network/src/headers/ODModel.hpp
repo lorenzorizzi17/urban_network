@@ -19,7 +19,6 @@ class ODModel{
     public:
         ODModel();
         ~ODModel();
-
         void run_graphics();
         void run();
 
@@ -31,26 +30,23 @@ class ODModel{
 		void erase_agents(Vertex);
         void set_flag(Vertex);
 		void render_graph(sf::RenderWindow&, Graph const&, Graph const&, std::map<Vertex, Edge>&);
-        void render_stat_panel(sf::RenderWindow&, Config const&, int);
+        void render_stat_panel(sf::RenderWindow&, Config const&, int, int);
 
     private:
         unsigned const display_height = 0.8 * sf::VideoMode::getDesktopMode().height;
-
         std::unique_ptr<sf::RenderWindow> m_main_window;
-        std::unique_ptr<sf::RenderWindow> m_stats_window;
-
-        Config m_config;
 
         Graph m_graph;
         Graph m_dual;
         Parser m_parser;
-        std::map<Vertex, Edge> m_conv_map;
+
+        Config m_config;
         Statistics m_stats;
 
+        std::map<Vertex, Edge> m_conv_map;
+
         int m_time = 0;
-        int m_N;
-
-
+        bool m_is_running = true;
 };
 
 #endif

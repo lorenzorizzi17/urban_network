@@ -23,10 +23,11 @@ class Agent {
     public:
         int m_total_time = 0;
         static int m_instances;
+        static int m_existing_agent;
         bool m_trav = false;
         // std::map here is just for debug
         Agent(Graph&, Vertex, std::map<Vertex, Edge>, Config const&);
-        Agent(Graph&, Vertex, Vertex, std::map<Vertex, Edge>);
+        ~Agent();
 
         Vertex get_vertex() const;
         Vertex get_vertex_destination() const;
@@ -36,7 +37,6 @@ class Agent {
         std::vector<Vertex> get_route() const;
 
         void set_edge(Vertex const& v);
-
 
         void evolve_dijsktra();
 

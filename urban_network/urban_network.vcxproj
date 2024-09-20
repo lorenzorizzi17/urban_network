@@ -164,7 +164,6 @@
     <ClInclude Include="src\headers\alias.hpp" />
     <ClInclude Include="src\headers\config.hpp" />
     <ClInclude Include="src\headers\dijkstra.hpp" />
-    <ClInclude Include="src\headers\dual_graph.hpp" />
     <ClCompile Include="src\dynamics.cpp" />
     <ClInclude Include="src\headers\graph_builder.hpp" />
     <ClInclude Include="src\headers\gridlock_exception.hpp" />

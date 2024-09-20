@@ -9,9 +9,13 @@ struct Config {
 	bool PARSING_MODE = false;
 	bool ENABLE_GRAPHICS = true;
 	bool PROCESS_STATS = true;
+	bool WRITE_DATA = true;
 
 	//draw directives
 	bool LOG_HISTO_FLOW = true;
+	int FLUX_BIN = 10;
+	int FLUX_MAX = 800;
+	int FLUX_MIN = 600;
 	bool LOG_HISTO_OCC = true;
 	bool LOG_OCCUPATION_VS_TIME = true;
 	bool LOG_HISTO_LIFESPAN = true;
@@ -24,7 +28,8 @@ struct Config {
 	int N_REMOVED_ROADS = 10;
 
 	//dynamical parameter
-	int N_AGENTS = 1900;
+	int N_AGENTS_INITIAL = 1400;
+	bool CONSTANT_AGENTS = true;
 	int MAX_SPAWNABLE = 1500;
 	int MIN_DIST_DIJKSTRA = 5;
 	int MAX_CAP = 15;

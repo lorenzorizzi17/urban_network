@@ -14,7 +14,6 @@ void Config::load_from_file(std::string const& s)
 	}
 	while (config_file.good()) {
 		std::string line;
-		std::cout << line << std::endl;
 		std::getline(config_file, line);
 		if (line.empty()) { continue; };
 		if ((line[0] == '\\') && (line[1] == '\\')) { continue; };
@@ -32,7 +31,7 @@ void Config::load_from_file(std::string const& s)
 		if (key == "ROAD_WEIGHT") ROAD_WEIGHT = std::stoi(value);
 		if (key == "N_DIAGONAL_ROADS") N_DIAGONAL_ROADS = std::stoi(value);
 		if (key == "N_REMOVED_ROADS") N_REMOVED_ROADS = std::stoi(value);
-		if (key == "N_AGENTS") N_AGENTS = std::stoi(value);
+		if (key == "N_AGENTS_INITIAL") N_AGENTS_INITIAL = std::stoi(value);
 		if (key == "MAX_SPAWNABLE") MAX_SPAWNABLE = std::stoi(value);
 		if (key == "MIN_DIST_DIJKSTRA") MIN_DIST_DIJKSTRA = std::stoi(value);
 		if (key == "MAX_CAP") MAX_CAP = std::stoi(value);
@@ -40,5 +39,10 @@ void Config::load_from_file(std::string const& s)
 		if (key == "TIME_TO_SLEEP") TIME_TO_SLEEP = std::stoi(value);
 		if (key == "TIME_MAX_SIMULATION") TIME_MAX_SIMULATION = std::stoi(value);
 		if (key == "LOG_HISTO_LIFESPAN") LOG_HISTO_LIFESPAN = (value == "true");
+		if (key == "WRITE_DATA") WRITE_DATA = (value == "true");
+		if (key == "FLUX_BIN") FLUX_BIN = std::stoi(value);
+		if (key == "FLUX_MAX") FLUX_MAX = std::stoi(value);
+		if (key == "FLUX_MIN") FLUX_MIN = std::stoi(value);
+		if (key == "CONSTANT_AGENTS") CONSTANT_AGENTS = (value == "true");
 	}
 }

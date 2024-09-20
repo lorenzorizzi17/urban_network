@@ -69,7 +69,9 @@ void ODModel::erase_agents(Vertex v)
             m_stats.update_lifespan((*it)->m_total_time);
         }
         queue.erase(it);
-        add_agents(1);
+        if (m_config.CONSTANT_AGENTS != 0) {
+            add_agents(1);
+        }
         it = std::find_if(queue.begin(), queue.end(), [](std::shared_ptr<Agent>& a_ptr){ return a_ptr->arrived(); });
     }
 }
