@@ -9,14 +9,14 @@ int main()
         int free_flows = 0;
         
         std::ofstream general_file;
-        general_file.open("fig/general/general_T"+ std::to_string(TIME_MAX_SIMULATION) + "_N" + std::to_string(N_AGENTS) +".txt",std::ios::app);
+        general_file.open("data/general/general_T"+ std::to_string(TIME_MAX_SIMULATION) + "_N" + std::to_string(N_AGENTS) +".txt",std::ios::app);
 
         //only when totally congested
         std::ofstream file;
-        file.open("fig/gridlock_time/OD_T" + std::to_string(TIME_MAX_SIMULATION) + "_N" + std::to_string(N_AGENTS) + ".txt", std::ios::app);
+        file.open("data/gridlock_time/OD_T" + std::to_string(TIME_MAX_SIMULATION) + "_N" + std::to_string(N_AGENTS) + ".txt", std::ios::app);
 
         std::ofstream file_gridlock_extension;
-        file_gridlock_extension.open("fig/congested_cluster_size/OD_T" + std::to_string(TIME_MAX_SIMULATION) + "_N" + std::to_string(N_AGENTS) + ".txt", std::ios::app);
+        file_gridlock_extension.open("data/congested_cluster_size/OD_T" + std::to_string(TIME_MAX_SIMULATION) + "_N" + std::to_string(N_AGENTS) + ".txt", std::ios::app);
         
         int const REP = 50;
         for (int i = 0; i < REP; i++) {

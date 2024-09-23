@@ -21,7 +21,6 @@ void Config::load_from_file(std::string const& s)
 		std::string value = line.substr(line.find(':') + 1);
 		if (key == "LOAD_GRAPH") LOAD_GRAPH = (value=="true");
 		if (key == "PARSING_MODE") PARSING_MODE = (value == "true");
-		if (key == "ENABLE_GRAPHICS") ENABLE_GRAPHICS = (value == "true");
 		if (key == "PROCESS_STATS") PROCESS_STATS = (value == "true");
 		if (key == "LOG_HISTO_FLOW") LOG_HISTO_FLOW = (value == "true");
 		if (key == "LOG_HISTO_OCC") LOG_HISTO_OCC = (value == "true");

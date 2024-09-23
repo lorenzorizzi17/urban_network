@@ -83,7 +83,7 @@ void ODModel::run_graphics() {
     while (m_main_window->isOpen() && m_time < m_config.TIME_MAX_SIMULATION)
     {
         if (m_time % 1 == 0) {
-            add_agents(25);
+            add_agents(0);
         }
 
         sf::Time sftime = clock.restart();

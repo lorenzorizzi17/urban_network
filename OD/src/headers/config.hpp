@@ -7,7 +7,6 @@ struct Config {
 	//general directives
 	bool LOAD_GRAPH = true;
 	bool PARSING_MODE = false;
-	bool ENABLE_GRAPHICS = true;
 	bool PROCESS_STATS = true;
 	bool WRITE_DATA = true;
 
