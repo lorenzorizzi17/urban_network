@@ -48,10 +48,11 @@ class Statistics {
     
     private:
         void draw_real_time_graph(sf::RenderWindow& , int, int, int, int);
+        void draw_agent_vs_time(sf::RenderWindow&, int, int, int, int);
         void draw_real_time_histo_flux(sf::RenderWindow& , int,int,int, Histogram&);
         void draw_histo_post(sf::RenderWindow& , Histogram&);
 		void draw_histo_occ(sf::RenderWindow& , int, int, int, int, Histogram&); 
-        void draw_histo_lifespan(sf::RenderWindow&, Histogram&, int, int&);
+        void draw_histo_lifespan(sf::RenderWindow&, Histogram&, int, int&, int);
     private:
         std::vector<int> m_flux;
         std::vector<int> m_lifespan;
@@ -62,10 +63,12 @@ class Statistics {
 
         //buffer items
         std::vector<sf::RectangleShape> m_buffer;
+		std::vector<sf::RectangleShape> m_buffer_agent;
         Histogram m_histo_flux;
         Histogram m_histo_occ;
 		Histogram m_histo_lifespan;
         int m_index_lifespan = 0;
+
 };
 
 

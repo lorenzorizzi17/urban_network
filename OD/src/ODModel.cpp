@@ -44,6 +44,16 @@ void ODModel::add_agents(int n_agents)
     }
 }
 
+void ODModel::add_agents() {
+	//add agents with a certain probability
+	if (m_config.PROBABILITY != 0) {
+		std::random_device rd;
+		std::mt19937 gen(rd());
+        std::poisson_distribution<> dis(m_config.PROBABILITY);
+        add_agents(dis(gen));
+	}
+}
+
 ODModel::ODModel() : m_stats( std::vector<int>{m_config.LOG_OCCUPATION_VS_TIME_NODE}){
     DEBUG("Starting simulation construction...");
     init();
@@ -82,16 +92,17 @@ void ODModel::run_graphics() {
     //sim loop
     while (m_main_window->isOpen() && m_time < m_config.TIME_MAX_SIMULATION)
     {
-        if (m_time % 1 == 0) {
-            add_agents(0);
-        }
-
+        
         sf::Time sftime = clock.restart();
+
+		//add agents with a certain probability
+        add_agents();
+
         //event handler
         handle_events(m_main_window, m_is_running);
 
         //clear window
-        m_main_window->clear(sf::Color::White);
+        m_main_window->clear(sf::Color(20,20,20,50));
 
         //setup statistics panel
         m_stats.clear();

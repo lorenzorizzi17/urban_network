@@ -11,7 +11,7 @@
 sf::Color interpolateColor(int x, int MAX_AGENTS)
 {
     if (x == 0) {
-        return sf::Color::Black;
+        return sf::Color(60, 60, 60);
     }
     if (x >= MAX_AGENTS) {
         return sf::Color::Red;
@@ -41,8 +41,8 @@ void ODModel::render_graph(sf::RenderWindow& w, Graph const& g, Graph const& dua
     //draw a vertical line that divides the window in two (for ref)
     sf::Vertex line[] =
     {
-        sf::Vertex(sf::Vector2f(window_lenght, 0), sf::Color::Black),  
-        sf::Vertex(sf::Vector2f(window_lenght, window_height), sf::Color::Black)
+        sf::Vertex(sf::Vector2f(window_lenght, 0), sf::Color(60, 60, 60)),  
+        sf::Vertex(sf::Vector2f(window_lenght, window_height), sf::Color(60, 60, 60))
     };
     w.draw(line, 2, sf::Lines);
 
@@ -60,7 +60,7 @@ void ODModel::render_graph(sf::RenderWindow& w, Graph const& g, Graph const& dua
     title.setString("Running simulation...");
     title.setCharacterSize(26);
     title.setStyle(sf::Text::Bold);
-    title.setFillColor(sf::Color::Black);
+    title.setFillColor(sf::Color(220, 220, 220));
     title.setOrigin(title.getLocalBounds().width / 2.0, title.getLocalBounds().height / 2.0);
     title.setPosition(0.5 * window_lenght, 0.45 * v_offset);
     w.draw(title);
@@ -104,7 +104,8 @@ void Statistics::display_data(std::unique_ptr<sf::RenderWindow>& m_main_window, 
         draw_histo_post(*m_main_window, m_histo_occ);
     }
     if (c.LOG_HISTO_LIFESPAN) {
-        draw_histo_lifespan(*m_main_window, m_histo_lifespan, 90, m_index_lifespan);
+        draw_histo_lifespan(*m_main_window, m_histo_lifespan, 80, m_index_lifespan, m_time);
+        //draw_agent_vs_time(*m_main_window, m_time, 100, 2500, c.MAX_CAP);
     }
 }
 
@@ -134,7 +135,7 @@ void Statistics::draw_real_time_graph(sf::RenderWindow& m_main_window, int time,
     //draw the ticks
     for (int i = 0; i < 20; i += 5) {
         sf::RectangleShape tick(sf::Vector2f(h_offset / 1.8, 3));
-        tick.setFillColor(sf::Color::Black);
+        tick.setFillColor(sf::Color(60, 60, 60));
         tick.setOrigin(h_offset / 2.4, 3);
         tick.setPosition(m_main_window.getSize().x / 2 + h_offset, box_height + v_offset - i * scale+1.5);
         m_main_window.draw(tick);
@@ -151,7 +152,7 @@ void Statistics::draw_real_time_graph(sf::RenderWindow& m_main_window, int time,
 		font.loadFromFile("graph/font.ttf");
 		text.setFont(font);
 		text.setCharacterSize(15);
-		text.setFillColor(sf::Color::Black);
+		text.setFillColor(sf::Color(60, 60, 60));
 		text.setString(std::to_string(i));
         sf::FloatRect textBounds = text.getLocalBounds();
         text.setOrigin(textBounds.left + textBounds.width, textBounds.top + textBounds.height);
@@ -189,21 +190,21 @@ void Statistics::draw_real_time_graph(sf::RenderWindow& m_main_window, int time,
 
     //draws the axis
     sf::RectangleShape x_axis(sf::Vector2f(box_lenght, 3));
-    x_axis.setFillColor(sf::Color::Black);
+    x_axis.setFillColor(sf::Color(60, 60, 60));
     x_axis.setPosition(m_main_window.getSize().x / 2 + h_offset, box_height + v_offset);
     m_main_window.draw(x_axis);
     sf::RectangleShape x_axis_v(sf::Vector2f(box_lenght, 3));
-    x_axis_v.setFillColor(sf::Color::Black);
+    x_axis_v.setFillColor(sf::Color(60, 60, 60));
     x_axis_v.setPosition(m_main_window.getSize().x / 2 + h_offset, v_offset);
     m_main_window.draw(x_axis_v);
     sf::RectangleShape y_axis(sf::Vector2f(3, box_height));
     y_axis.setOrigin(0, box_height);
-    y_axis.setFillColor(sf::Color::Black);
+    y_axis.setFillColor(sf::Color(60, 60, 60));
     y_axis.setPosition(m_main_window.getSize().x / 2 + h_offset, box_height + v_offset);
     m_main_window.draw(y_axis);
     sf::RectangleShape y_axis_v(sf::Vector2f(3, box_height));
     y_axis_v.setOrigin(0, box_height);
-    y_axis_v.setFillColor(sf::Color::Black);
+    y_axis_v.setFillColor(sf::Color(60, 60, 60));
     y_axis_v.setPosition(m_main_window.getSize().x / 2 + h_offset + box_lenght, box_height + v_offset);
     m_main_window.draw(y_axis_v);
 }
@@ -245,21 +246,21 @@ void Statistics::draw_real_time_histo_flux(sf::RenderWindow& m_main_window, int 
 
     //draw the axis
     sf::RectangleShape x_axis(sf::Vector2f(box_lenght, 3));
-    x_axis.setFillColor(sf::Color::Black);
+    x_axis.setFillColor(sf::Color(60, 60, 60));
     x_axis.setPosition(m_main_window.getSize().x / 2 + 2*h_offset + box_lenght, box_height + v_offset);
     m_main_window.draw(x_axis);
     sf::RectangleShape y_axis(sf::Vector2f(3, box_height));
     y_axis.setOrigin(0, box_height);
-    y_axis.setFillColor(sf::Color::Black);
+    y_axis.setFillColor(sf::Color(60, 60, 60));
     y_axis.setPosition(m_main_window.getSize().x / 2 +2* h_offset + box_lenght, box_height + v_offset);
     m_main_window.draw(y_axis);
     sf::RectangleShape x_axis_v(sf::Vector2f(box_lenght, 3));
-    x_axis_v.setFillColor(sf::Color::Black);
+    x_axis_v.setFillColor(sf::Color(60, 60, 60));
     x_axis_v.setPosition(m_main_window.getSize().x / 2 +2* h_offset + box_lenght, v_offset);
     m_main_window.draw(x_axis_v);
     sf::RectangleShape y_axis_v(sf::Vector2f(3, box_height));
     y_axis_v.setOrigin(0, box_height);
-    y_axis_v.setFillColor(sf::Color::Black);
+    y_axis_v.setFillColor(sf::Color(60, 60, 60));
     y_axis_v.setPosition(m_main_window.getSize().x / 2 + 2*h_offset + 2*box_lenght, box_height + v_offset);
     m_main_window.draw(y_axis_v);
 
@@ -339,27 +340,27 @@ void Statistics::draw_histo_post(sf::RenderWindow& m_main_window, std::map<int, 
 
     //draw the axis
     sf::RectangleShape x_axis(sf::Vector2f(box_lenght, 3));
-    x_axis.setFillColor(sf::Color::Black);
+    x_axis.setFillColor(sf::Color(60, 60, 60));
     x_axis.setPosition(m_main_window.getSize().x / 2 + h_offset, 2*box_height + 3*v_offset+box5_height);
     m_main_window.draw(x_axis);
     sf::RectangleShape y_axis(sf::Vector2f(3, box_height));
     y_axis.setOrigin(0, box_height);
-    y_axis.setFillColor(sf::Color::Black);
+    y_axis.setFillColor(sf::Color(60, 60, 60));
     y_axis.setPosition(m_main_window.getSize().x / 2 + h_offset, 2 * box_height + 3 * v_offset + box5_height);
     m_main_window.draw(y_axis);
     sf::RectangleShape x_axis_v(sf::Vector2f(box_lenght, 3));
-    x_axis_v.setFillColor(sf::Color::Black);
+    x_axis_v.setFillColor(sf::Color(60, 60, 60));
     x_axis_v.setPosition(m_main_window.getSize().x / 2 + h_offset, 1 * box_height + 3 * v_offset + box5_height);
     m_main_window.draw(x_axis_v);
     sf::RectangleShape y_axis_v(sf::Vector2f(3, box_height));
     y_axis_v.setOrigin(0, box_height);
-    y_axis_v.setFillColor(sf::Color::Black);
+    y_axis_v.setFillColor(sf::Color(60, 60, 60));
     y_axis_v.setPosition(m_main_window.getSize().x / 2 + h_offset + box_lenght, 2*box_height + 3 * v_offset + box5_height+1);
     m_main_window.draw(y_axis_v);
 }
 
 
-void Statistics::draw_histo_lifespan(sf::RenderWindow& m_main_window, std::map<int, int>& histolifespan, int bin, int& old_index) {
+void Statistics::draw_histo_lifespan(sf::RenderWindow& m_main_window, std::map<int, int>& histolifespan, int bin, int& old_index, int m_time) {
     int h_offset = 20;
     int v_offset = 20;
     int box5_height = 0.2 * m_main_window.getSize().y;
@@ -367,12 +368,14 @@ void Statistics::draw_histo_lifespan(sf::RenderWindow& m_main_window, std::map<i
     int box_height = (m_main_window.getSize().y - 4 * v_offset - box5_height) / 2.f;
     double bin_lenght = box_lenght / bin;
 
-    for (int i = old_index; i < this->get_lifespan().size(); i++) {
-        int actual_lifespan = this->get_lifespan()[i];
-        int bin_index = actual_lifespan;
-        histolifespan[bin_index] += 1;
+    if (m_time < 2500) {
+        for (int i = old_index; i < this->get_lifespan().size(); i++) {
+            int actual_lifespan = this->get_lifespan()[i];
+            int bin_index = actual_lifespan;
+            histolifespan[bin_index] += 1;
+        }
+        old_index = this->get_lifespan().size();
     }
-    old_index = this->get_lifespan().size();
 
     sf::RectangleShape boxBkg(sf::Vector2f(box_lenght, box_height));
     boxBkg.setFillColor(sf::Color(0, 0, 255, 25));
@@ -418,22 +421,105 @@ void Statistics::draw_histo_lifespan(sf::RenderWindow& m_main_window, std::map<i
 
 
     sf::RectangleShape x_axis(sf::Vector2f(box_lenght, 3));
-    x_axis.setFillColor(sf::Color::Black);
+    x_axis.setFillColor(sf::Color(60, 60, 60));
     x_axis.setPosition(m_main_window.getSize().x / 2 + 2*h_offset + box_lenght, 2 * box_height + 3 * v_offset + box5_height);
     m_main_window.draw(x_axis);
     sf::RectangleShape y_axis(sf::Vector2f(3, box_height));
     y_axis.setOrigin(0, box_height);
-    y_axis.setFillColor(sf::Color::Black);
+    y_axis.setFillColor(sf::Color(60, 60, 60));
     y_axis.setPosition(m_main_window.getSize().x / 2 + 2*h_offset + box_lenght, 2*box_height + 3 * v_offset + box5_height);
     m_main_window.draw(y_axis);
     sf::RectangleShape x_axis_v(sf::Vector2f(box_lenght, 3));
-    x_axis_v.setFillColor(sf::Color::Black);
+    x_axis_v.setFillColor(sf::Color(60, 60, 60));
     x_axis_v.setPosition(m_main_window.getSize().x / 2 + 2*h_offset+box_lenght, box_height + 3 * v_offset + box5_height);
     m_main_window.draw(x_axis_v);
     sf::RectangleShape y_axis_v(sf::Vector2f(3, box_height));
     y_axis_v.setOrigin(0, box_height);
-    y_axis_v.setFillColor(sf::Color::Black);
+    y_axis_v.setFillColor(sf::Color(60, 60, 60));
     y_axis_v.setPosition(m_main_window.getSize().x / 2 +  2*h_offset + 2*box_lenght, 2 * box_height + 3 * v_offset + box5_height);
+    m_main_window.draw(y_axis_v);
+}
+
+
+void Statistics::draw_agent_vs_time(sf::RenderWindow& m_main_window, int time, int interval, int occ_max, int N_MAX) {
+    int index_box = 0;
+    int h_offset = 20;
+    int v_offset = 20;
+    int box5_height = 0.2 * m_main_window.getSize().y;
+    double box_lenght = ((m_main_window.getSize().x / 2.0) - 3 * h_offset) / 2.f;
+    int box_height = (m_main_window.getSize().y - 4 * v_offset - box5_height) / 2.f;
+    int effective_time = time % interval;
+
+    //background box
+    sf::RectangleShape boxBkg(sf::Vector2f(box_lenght, box_height));
+    boxBkg.setFillColor(sf::Color(0, 0, 255, 25));
+    boxBkg.setPosition(m_main_window.getSize().x / 2 + 2 * h_offset + box_lenght, box_height + 3 * v_offset + box5_height);
+    m_main_window.draw(boxBkg);
+
+    if (effective_time == 0) {
+        m_buffer_agent.clear();
+    }
+
+    double scale = double(box_height) / double(occ_max);
+    double rect_height = scale * Agent::m_existing_agent;
+
+    //draw the ticks
+    for (int i = 0; i < occ_max; i += 250) {
+        sf::RectangleShape tick(sf::Vector2f(h_offset / 1.8, 3));
+        tick.setFillColor(sf::Color(60, 60, 60));
+        tick.setOrigin(h_offset / 2.4, 3);
+        tick.setPosition(m_main_window.getSize().x / 2 + 2*h_offset + box_lenght, 2*box_height+box5_height + 2*v_offset - i * scale + 1.5);
+        m_main_window.draw(tick);
+
+        sf::Vertex line[] =
+        {
+            sf::Vertex(sf::Vector2f(m_main_window.getSize().x / 2 + 2*h_offset + box_lenght, 2 * box_height + box5_height+ 2 * v_offset - i * scale), sf::Color(119,136,153)),  // Punto iniziale (X, Y)
+            sf::Vertex(sf::Vector2f(m_main_window.getSize().x / 2 + 2*box_lenght + 2*h_offset, 2 * box_height + box5_height+ 2 * v_offset - i * scale), sf::Color(119,136,153))   // Punto finale (X, Y)
+        };
+
+        m_main_window.draw(line, 2, sf::Lines);
+    }
+
+    //draw the rectangles
+    int rectangle_base = box_lenght / interval;
+    if (Agent::m_existing_agent > occ_max) {
+        rect_height = box_height;
+    }
+    sf::RectangleShape rectangle(sf::Vector2f(rectangle_base, rect_height));
+    rectangle.setOrigin(rectangle_base / 2.0, rect_height / 2.0);
+    rectangle.setFillColor(sf::Color::Blue);
+    rectangle.setPosition(m_main_window.getSize().x / 2 +2* h_offset+box_lenght + (effective_time + 0.5) * rectangle_base, box5_height+ 2*box_height - rect_height / 2.0 + 3*v_offset);
+    m_buffer_agent.push_back(rectangle);
+    for (sf::RectangleShape s : m_buffer_agent) {
+        m_main_window.draw(s);
+    }
+
+    //draw a line that follow the x axis
+    sf::Vertex line[] =
+    {
+        sf::Vertex(sf::Vector2f(m_main_window.getSize().x / 2 + h_offset + (effective_time + 0.5) * rectangle_base, box_height + v_offset), sf::Color(0,0,153)),  // Punto iniziale (X, Y)
+        sf::Vertex(sf::Vector2f(m_main_window.getSize().x / 2 + h_offset + (effective_time + 0.5) * rectangle_base, v_offset), sf::Color(0,0,200))   // Punto finale (X, Y)
+    };
+    m_main_window.draw(line, 2, sf::Lines);
+
+    //draws the axis
+    sf::RectangleShape x_axis(sf::Vector2f(box_lenght, 3));
+    x_axis.setFillColor(sf::Color(60, 60, 60));
+    x_axis.setPosition(m_main_window.getSize().x / 2 + 2 * h_offset + box_lenght, 2 * box_height + 3 * v_offset + box5_height);
+    m_main_window.draw(x_axis);
+    sf::RectangleShape y_axis(sf::Vector2f(3, box_height));
+    y_axis.setOrigin(0, box_height);
+    y_axis.setFillColor(sf::Color(60, 60, 60));
+    y_axis.setPosition(m_main_window.getSize().x / 2 + 2 * h_offset + box_lenght, 2 * box_height + 3 * v_offset + box5_height);
+    m_main_window.draw(y_axis);
+    sf::RectangleShape x_axis_v(sf::Vector2f(box_lenght, 3));
+    x_axis_v.setFillColor(sf::Color(60, 60, 60));
+    x_axis_v.setPosition(m_main_window.getSize().x / 2 + 2 * h_offset + box_lenght, box_height + 3 * v_offset + box5_height);
+    m_main_window.draw(x_axis_v);
+    sf::RectangleShape y_axis_v(sf::Vector2f(3, box_height));
+    y_axis_v.setOrigin(0, box_height);
+    y_axis_v.setFillColor(sf::Color(60, 60, 60));
+    y_axis_v.setPosition(m_main_window.getSize().x / 2 + 2 * h_offset + 2 * box_lenght, 2 * box_height + 3 * v_offset + box5_height);
     m_main_window.draw(y_axis_v);
 }
 
@@ -460,13 +546,36 @@ void ODModel::render_stat_panel(sf::RenderWindow& m_main_window, Config const& c
     sf::Text text;
     text.setFont(font);
     text.setCharacterSize(20);
-    text.setFillColor(sf::Color::Black);
-    text.setOrigin(text.getLocalBounds().width / 2.0, text.getLocalBounds().height / 2.0);
-    //title.setPosition(0.5 * window_lenght, 0.5 * v_offset);
-    text.setPosition(m_main_window.getSize().x / 2.0f + h_offset + 0.01 * box_lenght5, box_height + 1 * v_offset + 0.5 * box5_height);
-    std::string s = "Running at " + std::to_string(cycle_per_second) + " cycle per second"; 
+    text.setFillColor(sf::Color(220,220,220));
+    std::string s = "Running at " + std::to_string(cycle_per_second) + " cycle per second           Time: " + std::to_string(m_time/10); 
 	std::string s1 = "Existing agents: " + std::to_string(existing_agent); text.setString(s1);
-    text.setString(s + "\n"+s1);
+    std::string s2 = "Maximum cap: " + std::to_string(c.MAX_CAP);
+	std::string s3 = "Maximum flow: " + std::to_string(c.FLOW_RATE);
+    text.setString(s + "\n"+s1 + "\n"+s2 + "\n"+s3);
+    text.setOrigin(0, text.getLocalBounds().height / 2.0);
+
+    text.setPosition(m_main_window.getSize().x / 2.0f + 1.2*h_offset  , box_height + 2* v_offset+0.5*box5_height );
     m_main_window.draw(text);
     m_main_window.draw(boxBkg);
+
+    sf::Color Gray = sf::Color(60, 60, 60);
+    //draws the axis
+    sf::RectangleShape x_axis(sf::Vector2f(box_lenght5, 3));
+    x_axis.setFillColor(Gray);
+    x_axis.setPosition(m_main_window.getSize().x / 2 + h_offset, box_height + 2 * v_offset);
+    m_main_window.draw(x_axis);
+    sf::RectangleShape y_axis(sf::Vector2f(3, box5_height));
+    y_axis.setOrigin(0, box5_height);
+    y_axis.setFillColor(sf::Color(60, 60, 60));
+    y_axis.setPosition(m_main_window.getSize().x / 2 + h_offset, box_height + 2 * v_offset + box5_height);
+    m_main_window.draw(y_axis);
+    sf::RectangleShape x_axis_v(sf::Vector2f(box_lenght5, 3));
+    x_axis_v.setFillColor(sf::Color(60, 60, 60));
+    x_axis_v.setPosition(m_main_window.getSize().x / 2 + h_offset, box_height + 2 * v_offset + box5_height);
+    m_main_window.draw(x_axis_v);
+    sf::RectangleShape y_axis_v(sf::Vector2f(3, box5_height));
+    y_axis_v.setOrigin(0, box5_height);
+    y_axis_v.setFillColor(sf::Color(60, 60, 60));
+    y_axis_v.setPosition(m_main_window.getSize().x / 2 + h_offset + box_lenght5, box_height + 2 * v_offset + box5_height);
+    m_main_window.draw(y_axis_v);
 }

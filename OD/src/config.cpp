@@ -43,5 +43,7 @@ void Config::load_from_file(std::string const& s)
 		if (key == "FLUX_MAX") FLUX_MAX = std::stoi(value);
 		if (key == "FLUX_MIN") FLUX_MIN = std::stoi(value);
 		if (key == "CONSTANT_AGENTS") CONSTANT_AGENTS = (value == "true");
+		if (key == "PROBABILITY") PROBABILITY = std::stod(value);
+		if (key == "AGENT_FOR_TICK") AGENT_FOR_TICK = std::stoi(value);
 	}
 }

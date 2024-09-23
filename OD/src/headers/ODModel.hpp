@@ -25,6 +25,7 @@ class ODModel{
     private:
         void init();
         void add_agents(int);
+		void add_agents();
         void flow(Vertex, int);
 		void update_weights(Vertex);
 		void erase_agents(Vertex);

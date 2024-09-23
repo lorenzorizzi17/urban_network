@@ -48,20 +48,22 @@ void gridlock_exception::process() {
 };
 
 void check_for_gridlock(Graph& g, int time) {
-    std::vector<int> v;
-    for (auto it = boost::vertices(g).first; it != boost::vertices(g).second; it++) {
-        std::list<std::shared_ptr<Agent>>& queue = boost::get(&VertexProperty::queue, g, *it);
-        if (!queue.empty()) {
-            std::for_each(queue.begin(), queue.end(), [&](std::shared_ptr<Agent>& a_ptr)
-                { v.push_back(g[a_ptr->get_next_vertex()].full); });
+    if (Agent::m_existing_agent != 0) {
+        std::vector<int> v;
+        for (auto it = boost::vertices(g).first; it != boost::vertices(g).second; it++) {
+            std::list<std::shared_ptr<Agent>>& queue = boost::get(&VertexProperty::queue, g, *it);
+            if (!queue.empty()) {
+                std::for_each(queue.begin(), queue.end(), [&](std::shared_ptr<Agent>& a_ptr)
+                    { v.push_back(g[a_ptr->get_next_vertex()].full); });
+            }
         }
-    }
 
-    auto it = std::find(v.begin(), v.end(), 0);
-    if (it == v.end()) {
-        int c = 0;
-        std::for_each(boost::vertices(g).first, boost::vertices(g).second, [&](Vertex v) {if (!g[v].queue.empty()) { c++; }});
-        throw gridlock_exception{time, c };
+        auto it = std::find(v.begin(), v.end(), 0);
+        if (it == v.end()) {
+            int c = 0;
+            std::for_each(boost::vertices(g).first, boost::vertices(g).second, [&](Vertex v) {if (!g[v].queue.empty()) { c++; }});
+            throw gridlock_exception{ time, c };
+        }
     }
 }
 

@@ -28,6 +28,8 @@ struct Config {
 
 	//dynamical parameter
 	int N_AGENTS_INITIAL = 1400;
+	double PROBABILITY = 1;
+	int AGENT_FOR_TICK = 10;
 	bool CONSTANT_AGENTS = true;
 	int MAX_SPAWNABLE = 1500;
 	int MIN_DIST_DIJKSTRA = 5;
