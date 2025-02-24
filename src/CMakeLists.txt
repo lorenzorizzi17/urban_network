@@ -8,7 +8,8 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions(-D_DEBUG)
 endif()
 
-include_directories("~/boost_1_87_0/")
+include_directories("~/boost")
+
 
 find_package(SFML 2.5 REQUIRED COMPONENTS window system graphics)
 
