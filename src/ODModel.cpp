@@ -2,6 +2,7 @@
 #include"headers/agents.hpp"
 #include"headers/gridlock_exception.hpp"
 #include"headers/graph_utilities.hpp"
+#include <omp.h>
 
 int Agent::m_instances = 0;
 int Agent::m_existing_agent = 0;
@@ -9,7 +10,9 @@ Chart Agent::m_chart;
 
 //initialize the simulation
 void ODModel::init(){
-	m_config.load_from_file("src/config.txt");
+    #pragma omp critical
+	    m_config.load_from_file("src/config.txt");
+    
     if (m_config.LOAD_GRAPH) {
         DEBUG("Loading graph...");
         load_graph("graph/graph.dot", m_graph);
@@ -63,6 +66,15 @@ ODModel::ODModel() : m_stats( std::vector<int>{m_config.LOG_OCCUPATION_VS_TIME_N
     DEBUG("Simulation is now ready to start");
 }
 
+ODModel::ODModel(int N_AGENTS) : m_stats( std::vector<int>{m_config.LOG_OCCUPATION_VS_TIME_NODE}){
+    DEBUG("Starting simulation construction...");
+    init();
+    DEBUG("Creating agents...");
+    add_agents(N_AGENTS);
+    DEBUG("Agents have been correctly created");
+    DEBUG("Simulation is now ready to start");
+}
+
 ODModel::~ODModel() {
     //at destruction time, parse the graph
     if(m_config.PARSING_MODE){
@@ -78,7 +90,7 @@ void ODModel::run_graphics() {
 
     DEBUG("Creating windows...");
     m_main_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(2 * display_height, display_height), "Simulation");
-    m_main_window->setFramerateLimit(120);
+    // m_main_window->setFramerateLimit(120);
     DEBUG("Windows created.");
 
     //display stuff
@@ -89,6 +101,7 @@ void ODModel::run_graphics() {
     #endif
 
     sf::Clock clock;
+
     //sim loop
     while (m_main_window->isOpen() && m_time < m_config.TIME_MAX_SIMULATION)
     {
@@ -108,6 +121,8 @@ void ODModel::run_graphics() {
         m_stats.clear();
         
         //dynamic evolution: flow, update weights, erase agents
+
+        
         BGL_FORALL_VERTICES(v, m_dual, Graph) { flow(v, m_config.FLOW_RATE); }
         BGL_FORALL_VERTICES(v, m_dual, Graph) { update_weights(v); }
         BGL_FORALL_VERTICES(v, m_dual, Graph) { erase_agents(v); }
@@ -141,9 +156,7 @@ void ODModel::run_graphics() {
 
 
 void ODModel::run(){
-    sf::Clock clock;
     while (m_time < m_config.TIME_MAX_SIMULATION){
-        sf::Time sftime = clock.restart();
 
         //setup statistics panel
         m_stats.clear();
@@ -152,7 +165,7 @@ void ODModel::run(){
         BGL_FORALL_VERTICES(v, m_dual, Graph) { flow(v, m_config.FLOW_RATE); }
         BGL_FORALL_VERTICES(v, m_dual, Graph) { update_weights(v); }
         BGL_FORALL_VERTICES(v, m_dual, Graph) { erase_agents(v); }
-        BGL_FORALL_VERTICES(v, m_dual, Graph) { set_flag(v);}
+        BGL_FORALL_VERTICES(v, m_dual, Graph) { set_flag(v); }
 
         m_stats.update(m_dual);
 
@@ -160,6 +173,5 @@ void ODModel::run(){
         check_for_gridlock(m_dual, m_time);
 
         m_time++;
-		std::cout << "Speed: " << int(1 / sftime.asSeconds()) << std::endl;
     }
 }

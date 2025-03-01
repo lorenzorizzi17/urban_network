@@ -2,16 +2,17 @@
 #include "headers/alias.hpp"
 #include "headers/agents.hpp"
 #include "headers/ODModel.hpp"
+#include <omp.h>
 
 //loss function
 double f(double x) {
     return 0.001f * (x - 1) * (x - 1) * (x - 1) * (x - 1);
 }
 
-//flow function
 void ODModel::flow(Vertex v, int flow_rate)
 {
     std::list<std::shared_ptr<Agent>>& queue = boost::get(&VertexProperty::queue, m_dual, v);
+
     if (queue.empty()) {
         return;
     }
@@ -22,18 +23,18 @@ void ODModel::flow(Vertex v, int flow_rate)
     //iterate on the queue and move the agents to the next vertex if possible (given a max flux)
     while ((it != queue.end()) && (c < flow_rate))
     {
-        if (!((*it)->has_traveled()) && get(&VertexProperty::full, m_dual, (*it)->get_next_vertex()) == false)
+        if ( !((*it)->has_traveled()) && get(&VertexProperty::full, m_dual, (*it)->get_next_vertex()) == false)
         {
-            PVertex old_vertex = *std::find_if(boost::vertices(m_parser).first, boost::vertices(m_parser).second, [&](PVertex v) {return m_dual[(*it)->get_vertex()].index == m_parser[v].index; });
-            (*it)->evolve_dijsktra();
 
             if(m_config.PARSING_MODE){
+                PVertex old_vertex = *std::find_if(boost::vertices(m_parser).first, boost::vertices(m_parser).second, [&](PVertex v) {return m_dual[(*it)->get_vertex()].index == m_parser[v].index; });
                 PVertex new_vertex = *std::find_if(boost::vertices(m_parser).first, boost::vertices(m_parser).second, [&](PVertex v) {return m_dual[(*it)->get_vertex()].index == m_parser[v].index; });
                 get(boost::edge_weight, m_parser, (boost::edge(old_vertex, new_vertex, m_parser).first)) += 1;
                 get(&ParserProperty::pass, m_parser, old_vertex) += 1;
             }
-
-            boost::get(&VertexProperty::queue, m_dual, (*it)->get_vertex()).push_back(std::move((*it)));
+            
+            (*it)->evolve_dijsktra();
+            boost::get(&VertexProperty::queue, m_dual, (*it)->get_vertex()).push_back(std::move((*it))); 
             it = queue.erase(it);
             c++;
 
@@ -45,6 +46,56 @@ void ODModel::flow(Vertex v, int flow_rate)
             it++;
         }
     }
+    
+}
+//flow function
+void ODModel::flow_multithreading(Vertex v, int flow_rate, std::vector<omp_lock_t>& locks)
+{
+    omp_set_lock(&locks[v]);
+    std::list<std::shared_ptr<Agent>>& queue = boost::get(&VertexProperty::queue, m_dual, v);
+
+    if (queue.empty()) {
+        omp_unset_lock(&locks[v]);
+        return;
+    }
+
+    int c = 0;
+    auto it = queue.begin();
+
+    
+
+    //iterate on the queue and move the agents to the next vertex if possible (given a max flux)
+    while ((it != queue.end()) && (c < flow_rate))
+    {
+        if ( !((*it)->has_traveled()) && get(&VertexProperty::full, m_dual, (*it)->get_next_vertex()) == false)
+        {
+
+            if(m_config.PARSING_MODE){
+                PVertex old_vertex = *std::find_if(boost::vertices(m_parser).first, boost::vertices(m_parser).second, [&](PVertex v) {return m_dual[(*it)->get_vertex()].index == m_parser[v].index; });
+                PVertex new_vertex = *std::find_if(boost::vertices(m_parser).first, boost::vertices(m_parser).second, [&](PVertex v) {return m_dual[(*it)->get_vertex()].index == m_parser[v].index; });
+                get(boost::edge_weight, m_parser, (boost::edge(old_vertex, new_vertex, m_parser).first)) += 1;
+                get(&ParserProperty::pass, m_parser, old_vertex) += 1;
+            }
+            
+            (*it)->evolve_dijsktra();
+            int lock = (*it)->get_vertex();
+
+            boost::get(&VertexProperty::queue, m_dual, (*it)->get_vertex()).push_back(std::move((*it))); 
+            
+
+            it = queue.erase(it);
+            c++;
+
+            if(m_config.PROCESS_STATS){
+                m_stats.update_flux();
+            }
+        }
+        else {
+            it++;
+        }
+    }
+    omp_unset_lock(&locks[v]);
+    
 }
 
 //update the weghts
