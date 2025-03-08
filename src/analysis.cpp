@@ -1,24 +1,24 @@
 //user-defined library to run the sim
 #include"./headers/ODModel.hpp"
 #include"./headers/gridlock_exception.hpp"
-# include"omp.h"
+#include"omp.h"
 
 int main()
 {
-    for (int N_AGENTS = 2000; N_AGENTS < 2201; N_AGENTS += 100) {
+    for (int N_AGENTS = 1675; N_AGENTS < 1676; N_AGENTS += 100) {
 
         int total_gridlocks = 0;
         int free_flows = 0;
         
         std::ofstream general_file;
-        general_file.open("./data/general/general_T20000_N" + std::to_string(N_AGENTS) +".txt",std::ios::app);
+        general_file.open("./data/general/general_T10000_N" + std::to_string(N_AGENTS) +".txt",std::ios::app);
 
         //only when totally congested
         std::ofstream file;
-        file.open("./data/gridlock_time/OD_T20000_N" + std::to_string(N_AGENTS) + ".txt", std::ios::app);
+        file.open("./data/gridlock_time/OD_T10000_N" + std::to_string(N_AGENTS) + ".txt", std::ios::app);
 
         std::ofstream file_gridlock_extension;
-        file_gridlock_extension.open("data/congested_cluster_size/OD_T20000_N" + std::to_string(N_AGENTS) + ".txt", std::ios::app);
+        file_gridlock_extension.open("data/congested_cluster_size/OD_T10000_N" + std::to_string(N_AGENTS) + ".txt", std::ios::app);
 
         int const REP = 80;
         omp_set_num_threads(8);
@@ -37,10 +37,10 @@ int main()
                 }
             }
             catch (gridlock_exception const& e) {
-                file << e.getTime() << std::endl;
-                file_gridlock_extension << e.getCongestedNodes() << std::endl;
                 #pragma omp critical
                 {
+                    file << e.getTime() << std::endl;
+                    file_gridlock_extension << e.getCongestedNodes() << std::endl;
                     total_gridlocks++;
                     std::cout <<  "Thread n. "<< omp_get_thread_num() << " signals tt" << std::endl;
                 }

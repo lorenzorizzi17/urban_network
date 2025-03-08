@@ -43,7 +43,8 @@ else()
     target_link_libraries(main
         sfml-graphics
         sfml-window
-        sfml-system )
+        sfml-system 
+        OpenMP::OpenMP_CXX )
     
 endif()
 

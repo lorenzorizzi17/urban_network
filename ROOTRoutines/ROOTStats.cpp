@@ -15,7 +15,7 @@ void DisplayHisto(std::string s) {
     gStyle->SetStatH(0.2);
 
     
-    TH1F* histos = new TH1F("", "", 100, 0, 100);;
+    TH1F* histos = new TH1F("", "", 100, 0, 2000);;
     std::string name = "Histogram ";;
     char const *histName = name.c_str();
     histos->SetNameTitle(histName,"Flux in: 9");

@@ -31,6 +31,7 @@ void ODModel::init(){
         print_graph(m_graph, m_dual, m_conv_map);
         DEBUG("Direct and dual graph have been correctly drawn");
     }
+
     DEBUG("Creating parser graph...");
     m_parser = make_parser(m_dual);
     DEBUG("Parser graph correctly built.");
@@ -43,7 +44,7 @@ void ODModel::add_agents(int n_agents)
     for (int i = 0; i < n_agents; i++)
     {
         Vertex v = *get_random_vertex(m_dual);
-        boost::get(&VertexProperty::queue, m_dual, v).push_back(std::make_shared<Agent>(m_dual, v, m_conv_map,m_config));
+        boost::get(&VertexProperty::queue, m_dual, v).push_back(std::make_shared<Agent>(m_dual, v, m_conv_map, m_config));
     }
 }
 
@@ -70,7 +71,8 @@ ODModel::ODModel(int N_AGENTS) : m_stats( std::vector<int>{m_config.LOG_OCCUPATI
     DEBUG("Starting simulation construction...");
     init();
     DEBUG("Creating agents...");
-    add_agents(N_AGENTS);
+    m_config.N_AGENTS_INITIAL = N_AGENTS;
+    add_agents(m_config.N_AGENTS_INITIAL);
     DEBUG("Agents have been correctly created");
     DEBUG("Simulation is now ready to start");
 }
@@ -82,7 +84,7 @@ ODModel::~ODModel() {
     }
     //save the statistics data
 	if (m_config.WRITE_DATA) {
-		m_stats.save(m_dual,m_config.TIME_MAX_SIMULATION, m_config.N_AGENTS_INITIAL);
+		m_stats.save(m_dual, m_config.TIME_MAX_SIMULATION, m_config.N_AGENTS_INITIAL);
 	}
 }
 
@@ -90,7 +92,7 @@ void ODModel::run_graphics() {
 
     DEBUG("Creating windows...");
     m_main_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(2 * display_height, display_height), "Simulation");
-    // m_main_window->setFramerateLimit(120);
+    m_main_window->setFramerateLimit(120);
     DEBUG("Windows created.");
 
     //display stuff
@@ -101,7 +103,7 @@ void ODModel::run_graphics() {
     #endif
 
     sf::Clock clock;
-
+    bool m_step = false;
     //sim loop
     while (m_main_window->isOpen() && m_time < m_config.TIME_MAX_SIMULATION)
     {
@@ -112,7 +114,7 @@ void ODModel::run_graphics() {
         add_agents();
 
         //event handler
-        handle_events(m_main_window, m_is_running);
+        handle_events(m_main_window, m_is_running, m_dual, m_step);
 
         //clear window
         m_main_window->clear(sf::Color(20,20,20,50));
@@ -120,13 +122,14 @@ void ODModel::run_graphics() {
         //setup statistics panel
         m_stats.clear();
         
-        //dynamic evolution: flow, update weights, erase agents
-
         
-        BGL_FORALL_VERTICES(v, m_dual, Graph) { flow(v, m_config.FLOW_RATE); }
-        BGL_FORALL_VERTICES(v, m_dual, Graph) { update_weights(v); }
-        BGL_FORALL_VERTICES(v, m_dual, Graph) { erase_agents(v); }
-        BGL_FORALL_VERTICES(v, m_dual, Graph) { set_flag(v); }
+        if (m_is_running || m_step) {
+            //dynamic evolution: flow, update weights, erase agents
+            BGL_FORALL_VERTICES(v, m_dual, Graph) { flow(v, m_config.FLOW_RATE); }
+            BGL_FORALL_VERTICES(v, m_dual, Graph) { update_weights(v); }
+            BGL_FORALL_VERTICES(v, m_dual, Graph) { erase_agents(v); }
+            BGL_FORALL_VERTICES(v, m_dual, Graph) { set_flag(v); }
+        }
 
         //draws the simulation on the appropriate panel
         render_graph(*m_main_window, m_graph, m_dual, m_conv_map);
@@ -141,7 +144,6 @@ void ODModel::run_graphics() {
 
         //stops the simulation if a hard gridlock is reached
         check_for_gridlock(m_dual, m_time);
-
 
         //display SFML windows
         m_main_window->display();

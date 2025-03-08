@@ -48,6 +48,7 @@ void ODModel::flow(Vertex v, int flow_rate)
     }
     
 }
+
 //flow function
 void ODModel::flow_multithreading(Vertex v, int flow_rate, std::vector<omp_lock_t>& locks)
 {
@@ -162,20 +163,15 @@ void ODModel::set_flag(Vertex v) {
     }
 }
 
-
-
-
-/*
-void print_info(Vertex v, Graph& g, Graph& dual, int time, std::map<Vertex, Edge> map_dual)
+void print_info(Vertex v, Graph& dual, int time)
 {
     std::list<std::shared_ptr<Agent>>& queue = boost::get(&VertexProperty::queue, dual, v);
     if (queue.size() != 0)
     {
-        DEBUG("v. " + std::to_string(dual[v].index) + " | agents id : ");
+        std::cout << "VERTEX: " + std::to_string(dual[v].index) + " | agents id : ";
         std::for_each(queue.begin(), queue.end(), [&](std::shared_ptr<Agent> const& a_ptr)
-            { std::cout << a_ptr->get_id() << " ( to "; if (a_ptr->arrived()) { std::cout << "arrived. "; }
+            { std::cout << a_ptr->get_id() << " ( to "; if (a_ptr->arrived()) { std::cout << "arr. "; }
             else { std::cout << dual[a_ptr->get_next_vertex()].index << "), "; };  });
         std::cout << std::endl << std::endl;
     }
 }
-*/
