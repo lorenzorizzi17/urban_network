@@ -6,6 +6,8 @@
 #include "headers/ODModel.hpp"
 #include"headers/statistics.hpp"
 
+#define M_PI 3.14159
+
 sf::Color interpolateColor(int x, int MAX_AGENTS)
 {
     if (x == 0) {

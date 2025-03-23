@@ -1,6 +1,7 @@
 #include<iostream>
 #include<fstream>
 #include<vector>
+#include<math.h>
 #include"TGraph.h"
 
 void DisplayHisto(std::string s) {
@@ -38,7 +39,60 @@ void DisplayHisto(std::string s) {
     myfile.close();
 
     histos->Draw();
+}
 
+
+void processGeneralGraph(){
+
+    int const N = 20;
+    double Ns[N] = {1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400, 2500, 2600, 2700, 2800, 2900, 3000, 3100, 3200, 3300,3400};
+    double errNs[N];
+    double p[N];
+    double errp[N];
+
+    for (int ix = 0; ix < N; ix++){
+        std::ifstream myfile;
+        myfile.open("/home/lrizzi17/UrbanNetwork/data/general/T10000/general_T10000_N" + std::to_string(int(Ns[ix])) + ".txt");
+        int tot_t = 0;
+        int tot_f = 0;
+        while(myfile.good()){
+            int t, f;
+            std::string placeholder1, placeholder2;
+            myfile >> placeholder1 >> t >> placeholder2 >> f;
+            tot_t += t;
+            tot_f += f;
+        }
+        myfile.close();
+        int tot = tot_t+tot_f;
+        p[ix] = (double(tot_t)/tot);
+        errp[ix] = std::sqrt(double(tot_t))/tot;
+        errNs[ix] = 0;
+    }
+
+    //std::ifstream myfile("./data/general_T10000.txt", std::ifstream::in);
+    TGraphErrors* gr = new TGraphErrors(N, Ns, p, errNs, errp);
+    gr->SetMarkerStyle(21);
+    gr->SetMarkerSize(0.8);
+    gr->SetMarkerColor(kRed);
+    gr->SetLineColor(kRed);
+    gr->SetTitle("Gridlocks");
+    gr->GetXaxis()->SetTitle("Traffic load (N)");
+    gr->GetYaxis()->SetTitle("Percentage of gridlocks");
+    gr->Draw("AP");
+}
+
+void DisplayGraph(){
+    // read a graph from a file
+
+    TGraphErrors* gr = new TGraphErrors("./ROOTRoutines/general_T10000.txt", "%lg %lg %lg %lg");
+    gr->SetMarkerStyle(21);
+    gr->SetMarkerSize(0.8);
+    gr->SetMarkerColor(kRed);
+    gr->SetLineColor(kRed);
+    gr->SetTitle("General");
+    gr->GetXaxis()->SetTitle("X");
+    gr->GetYaxis()->SetTitle("Y");
+    gr->Draw("AP");
 }
 
 

@@ -77,6 +77,17 @@ ODModel::ODModel(int N_AGENTS) : m_stats( std::vector<int>{m_config.LOG_OCCUPATI
     DEBUG("Simulation is now ready to start");
 }
 
+ODModel::ODModel(int N_AGENTS, int TIME) : m_stats( std::vector<int>{m_config.LOG_OCCUPATION_VS_TIME_NODE}){
+    DEBUG("Starting simulation construction...");
+    init();
+    DEBUG("Creating agents...");
+    m_config.N_AGENTS_INITIAL = N_AGENTS;
+    m_config.TIME_MAX_SIMULATION = TIME;
+    add_agents(m_config.N_AGENTS_INITIAL);
+    DEBUG("Agents have been correctly created");
+    DEBUG("Simulation is now ready to start");
+}
+
 ODModel::~ODModel() {
     //at destruction time, parse the graph
     if(m_config.PARSING_MODE){
@@ -158,6 +169,8 @@ void ODModel::run_graphics() {
 
 
 void ODModel::run(){
+    #pragma omp critical
+    std::cout << "Agents: " << m_config.N_AGENTS_INITIAL << ", T = " << m_config.TIME_MAX_SIMULATION << std::endl;
     while (m_time < m_config.TIME_MAX_SIMULATION){
 
         //setup statistics panel

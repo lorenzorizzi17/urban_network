@@ -8,7 +8,6 @@
 #include "graphics.hpp"
 #include "config.hpp"
 #include "statistics.hpp"
-#include "omp.h"
 
 #if _DEBUG
 #define DEBUG(x) DEBUG(x)
@@ -19,8 +18,9 @@
 class ODModel{
     public:
         ODModel();
-        ODModel(int);
         ~ODModel();
+        ODModel(int);
+        ODModel(int, int);
         void run_graphics();
         void run();
 
@@ -29,7 +29,6 @@ class ODModel{
         void add_agents(int);
 		void add_agents();
         void flow(Vertex, int);
-        void flow_multithreading(Vertex, int, std::vector<omp_lock_t>&);
 		void update_weights(Vertex);
 		void erase_agents(Vertex);
         void set_flag(Vertex);
