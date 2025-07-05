@@ -26,7 +26,8 @@ Phase transition:
 
 Let the simulation run for $T=10,000$ time steps. If the traffic load $N$ is below a certain threshold, the system evolves freely and reaches a stationary distribution where traffic flows steadily. Above that threshold, the system evolves into a gridlock state, where mobility is severely congested and agents can no longer move.
 
--- image
+![P(Gridlock)_page-0001](https://github.com/user-attachments/assets/2837fef7-2334-44a0-8dc0-3c1c77412695)
+
 
 The graph above shows the occurrence of gridlocks when the system is allowed to evolve for T=10, ⁣000T=10,000 time steps. This behavior is a strong indicator of a potential phase transition around a specific value of the traffic load. However, since we are not in the thermodynamic limit, the transition appears smooth rather than abrupt.
 
