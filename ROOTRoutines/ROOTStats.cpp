@@ -14,7 +14,6 @@ void DisplayHisto(std::string s) {
     gStyle->SetStatY(0.9);
     gStyle->SetStatW(0.5); 
     gStyle->SetStatH(0.2);
-
     
     TH1F* histos = new TH1F("", "", 100, 0, 2000);;
     std::string name = "Histogram ";;
@@ -44,8 +43,8 @@ void DisplayHisto(std::string s) {
 
 void processGeneralGraph(){
 
-    int const N = 20;
-    double Ns[N] = {1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400, 2500, 2600, 2700, 2800, 2900, 3000, 3100, 3200, 3300,3400};
+    int const N = 24;
+    double Ns[N] = {1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400, 2500, 2600, 2700, 2800, 2900, 3000, 3100, 3200, 3300,3400, 3500, 3600, 3700, 3800};
     double errNs[N];
     double p[N];
     double errp[N];
