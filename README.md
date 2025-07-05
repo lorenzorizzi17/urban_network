@@ -22,11 +22,18 @@ The dynamical evolution of the system is modulated by two fundamental parameters
 
 ## Results
 
-Phase transition, different attractive phases / equilibrium points
+Phase transition:
 
-Flux vs load (MFE)
+Let the simulation run for $T=10,000$ time steps. If the traffic load $N$ is below a certain threshold, the system evolves freely and reaches a stationary distribution where traffic flows steadily. Above that threshold, the system evolves into a gridlock state, where mobility is severely congested and agents can no longer move.
 
-Relaxation time
+-- image
+
+The graph above shows the occurrence of gridlocks when the system is allowed to evolve for T=10, ⁣000T=10,000 time steps. This behavior is a strong indicator of a potential phase transition around a specific value of the traffic load. However, since we are not in the thermodynamic limit, the transition appears smooth rather than abrupt.
+
+
+(TODO) Flux vs load (MFE)
+
+(TODO) Relaxation time
 
 
 ## Requirements

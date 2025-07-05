@@ -72,9 +72,10 @@ void processGeneralGraph(){
     TGraphErrors* gr = new TGraphErrors(N, Ns, p, errNs, errp);
     gr->SetMarkerStyle(21);
     gr->SetMarkerSize(0.8);
+    gr->GetYaxis()->SetLimits(-0.2, 1.2);
     gr->SetMarkerColor(kRed);
     gr->SetLineColor(kRed);
-    gr->SetTitle("Gridlocks");
+    gr->SetTitle("P(Gridlock)");
     gr->GetXaxis()->SetTitle("Traffic load (N)");
     gr->GetYaxis()->SetTitle("Percentage of gridlocks");
     gr->Draw("AP");

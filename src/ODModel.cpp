@@ -49,7 +49,6 @@ void ODModel::add_agents(int n_agents)
 }
 
 void ODModel::add_agents() {
-	//add agents with a certain probability
 	if (m_config.PROBABILITY != 0) {
 		std::random_device rd;
 		std::mt19937 gen(rd());
